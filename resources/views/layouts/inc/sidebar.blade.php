@@ -20,6 +20,48 @@
                 <div data-i18n="Beranda">Beranda</div>
             </a>
         </li>
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text" data-i18n="Lainnya">Lainnya</span>
+        </li>
+
+        <li class="menu-item 
+            @if(request()->routeIs('users.*') || 
+                request()->routeIs('roles.*') || 
+                request()->routeIs('permissions.*')) 
+                open 
+            @endif">
+
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-users"></i>
+                <div data-i18n="Authentication">Authentication</div>
+            </a>
+            
+            <ul class="menu-sub">
+                <li class="menu-item @if(request()->routeIs('users.*')) active @endif">
+                    <a href="{{ route('users.index') }}" class="menu-link">
+                        <div data-i18n="Users">Users</div>
+                    </a>
+                </li>
+                <li class="menu-item @if(request()->routeIs('roles.*')) active @endif">
+                    <a href="{{ route('roles.index') }}" class="menu-link">
+                        <div data-i18n="Roles">Roles</div>
+                    </a>
+                </li>
+                <li class="menu-item @if(request()->routeIs('permissions.*')) active @endif">
+                    <a href="{{ route('permissions.index') }}" class="menu-link">
+                        <div data-i18n="Permissions">Permissions</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item @if(request()->routeIs('settings')) active @endif">
+            <a href="{{ route('settings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-settings"></i>
+                <div data-i18n="Pengaturan">Pengaturan</div>
+            </a>
+        </li>
     </ul>
 </aside>
 <!-- / Menu -->
