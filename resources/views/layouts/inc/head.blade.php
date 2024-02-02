@@ -26,11 +26,16 @@
 <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
 
 <!-- Vendors CSS -->
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" />
 @stack('vendor-styles')
 
 <!-- Page CSS -->
 <!-- Page -->
 @stack('styles')
+
+@vite(['resources/scss/app.scss'])
 
 <!-- Helpers -->
 <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>

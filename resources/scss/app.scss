@@ -1,0 +1,21 @@
+.dt-buttons {
+    display: flex;
+}
+
+@for $i from 1 through 100 {
+    .min-h-#{$i}vh {
+        min-height: #{$i}vh;
+    }
+}
+
+@for $i from 1 through 568 {
+    .min-h-#{$i}px {
+        min-height: #{$i}px;
+    }
+}
+
+@for $i from 1 through 568 {
+    .w-#{$i}px {
+        width: #{$i}px;
+    }
+}

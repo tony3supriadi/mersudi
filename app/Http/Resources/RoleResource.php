@@ -18,6 +18,7 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'user_count' => $this->users->count(),
             'created_at' => Carbon::parse($this->created_at)
                 ->isoFormat('DD MMM YYYY HH:mm')
         ];

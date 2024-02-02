@@ -17,6 +17,8 @@
 
 <!-- Main JS -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{ asset('assets/js/ajax-form-submitter.js') }}"></script>
+<script src="{{ asset('assets/js/scripts.js') }}"></script>
 
 <!-- Page JS -->
 @stack('scripts')

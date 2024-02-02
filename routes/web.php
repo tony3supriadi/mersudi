@@ -22,8 +22,21 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['prefix' => 'auth'], function () {
         Route::resource('users', App\Http\Controllers\UserController::class);
-        Route::resource('roles', App\Http\Controllers\RoleController::class);
-        Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+
+        Route::group([
+            'prefix' => 'roles',
+            'as' => 'roles.',
+            'controller' => App\Http\Controllers\RoleController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{role}/edit', 'edit')->name('edit');
+            Route::put('/{role}', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+
+        Route::get('permissions', [App\Http\Controllers\PermissionController::class, 'index'])->name('permissions.index');
     });
 
     Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
