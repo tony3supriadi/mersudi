@@ -21,7 +21,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'auth'], function () {
-        Route::resource('users', App\Http\Controllers\UserController::class);
+        Route::group([
+            'prefix' => 'users',
+            'as' => 'users.',
+            'controller' => App\Http\Controllers\UserController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{user}', 'show')->name('show');
+            Route::get('/{user}/edit', 'edit')->name('edit');
+            Route::put('/{user}', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
 
         Route::group([
             'prefix' => 'roles',

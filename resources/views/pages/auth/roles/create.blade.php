@@ -130,7 +130,7 @@
                             window.location.reload();
                             break;
                         case 'edit':
-                            window.location.href = `{{ route('roles.index') }}/${response.data.id}/ubah`;
+                            window.location.href = `{{ route('roles.index') }}/${response.data.id}/edit`;
                             break;
                         default:
                             window.location.href = `{{ route('roles.index') }}`;

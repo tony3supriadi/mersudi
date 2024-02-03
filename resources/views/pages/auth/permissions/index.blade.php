@@ -61,10 +61,12 @@
                     if (data.length) {
                         return data.map((item) => {
                             if (item.name == "Admin") {
-                                return '<a href="{{ route("users.index", ["role" => "Admin"]) }}"><span class="badge bg-label-primary m-1">Administrator</span></a>';
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-primary m-1">Administrator</span></a>';
                             } else
                             if (item.name == "Anggota") {
-                                return '<a href="{{ route("users.index", ["role" => "Admin"]) }}"><span class="badge bg-label-success m-1">Administrator</span></a>';
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-success m-1">' + item.name + '</span></a>';
+                            } else {
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-default m-1">' + item.name + '</span></a>';
                             }
                         });
                     }

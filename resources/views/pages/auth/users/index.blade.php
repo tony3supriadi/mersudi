@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Roles')
+@section('title', 'Users')
 
 @section('content')
-<h4 class="mb-4">Daftar Role</h4>
+<h4 class="mb-4">Daftar User</h4>
 <p class="mb-4">
-    Daftar role untuk memberikan akses ke beberapa module atau fitur yang ditentukan oleh aplikasi Mersudi.
+    Daftar pengguna aplikasi Mersudi dengan pengelompokan berdasarkan role.
 </p>
 
 <div class="row g-4">
@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<form action="{{ route('roles.destroy') }}" method="POST" id="delete-submit" class="d-none">
+<form action="{{ route('users.destroy') }}" method="POST" id="delete-submit" class="d-none">
     @csrf
     @method('delete')
     <input type="hidden" name="ids" value="" />
@@ -48,7 +48,7 @@
 
     $(function() {
         $('.datatable').DataTable({
-            ajax: "{{ route('roles.index') }}",
+            ajax: "{{ route('users.index') }}",
             width: '100%',
             serverSide: true,
             processing: true,
@@ -88,17 +88,32 @@
                 orderable: false
             }, {
                 data: "name",
-                title: "Roles",
+                title: "Nama",
                 width: 300,
                 orderable: false
             }, {
-                data: "users",
-                title: "Users",
+                data: "email",
+                title: "Email",
                 searchable: false,
                 orderable: false,
+            }, {
+                data: "roles",
+                title: "Roles",
+                orderable: false,
                 render: (data, type, row, meta) => {
-                    var userCount = data.length ?? 0
-                    return `<a href="{{ route('users.index') }}?role=${row.name}">${userCount} users</a>`;
+                    if (data.length) {
+                        return data.map((item) => {
+                            if (item.name == "Admin") {
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-primary m-1">Administrator</span></a>';
+                            } else
+                            if (item.name == "Anggota") {
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-success m-1">' + item.name + '</span></a>';
+                            } else {
+                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-default m-1">' + item.name + '</span></a>';
+                            }
+                        });
+                    }
+                    return '-';
                 }
             }, {
                 data: "created_at",
@@ -123,7 +138,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="{{ route('roles.index') }}/${row.id}/edit" class="dropdown-item">
+                                    <a href="{{ route('users.index') }}/${row.id}" class="dropdown-item">
+                                        <span class="ti ti-eye"></span> Detail
+                                    </a>
+
+                                    <a href="{{ route('users.index') }}/${row.id}/edit" class="dropdown-item">
                                         <span class="ti ti-edit"></span> Ubah
                                     </a>
 
@@ -142,14 +161,14 @@
                 text: '<span class="ti ti-plus"></span> Tambah Baru',
                 className: 'btn btn-primary d-none d-md-inline-block me-1',
                 action: (e, dt, button, config) => {
-                    window.location = "{{ route('roles.create') }}"
+                    window.location = "{{ route('users.create') }}"
                 }
             }, {
                 // Mobile
                 text: '<span class="ti ti-plus"></span>',
                 className: 'btn btn-primary btn-icon d-md-none me-1',
                 action: (e, dt, button, config) => {
-                    window.location = "{{ route('roles.create') }}"
+                    window.location = "{{ route('users.create') }}"
                 }
             }, {
                 // Desktop

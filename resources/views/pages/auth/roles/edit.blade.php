@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Roles - Tambah Baru')
+@section('title', 'Roles - Ubah Data')
 
 @section('content')
     <h4 class="content-header-title">

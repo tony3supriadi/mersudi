@@ -54,7 +54,8 @@ class RoleController extends Controller
         $role->syncPermissions($request->permissions);
         return response()->json([
             'status' => 'success',
-            'message' => 'Role created successfully'
+            'message' => 'Role created successfully',
+            'data' => $role
         ], 200);
     }
 
@@ -92,7 +93,8 @@ class RoleController extends Controller
         $role->syncPermissions($request->permissions);
         return response()->json([
             'status' => 'success',
-            'message' => 'Role updated successfully'
+            'message' => 'Role updated successfully',
+            'data' => $role
         ], 200);
     }
 
