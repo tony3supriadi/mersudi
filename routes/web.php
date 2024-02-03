@@ -21,6 +21,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'auth'], function () {
+        Route::get('/account', [App\Http\Controllers\Auth\AccountController::class, 'index'])->name('auth.account');
+        Route::post('/account', [App\Http\Controllers\Auth\AccountController::class, 'account_update'])->name('auth.account.update');
+        Route::get('/account/settings', [App\Http\Controllers\Auth\AccountController::class, 'setting'])->name('auth.account.settings');
+        Route::post('/account/settings', [App\Http\Controllers\Auth\AccountController::class, 'setting_update'])->name('auth.account.settings.update');
+
         Route::group([
             'prefix' => 'users',
             'as' => 'users.',
