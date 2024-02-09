@@ -141,6 +141,7 @@
                                 case 3: type = "danger"; break;
                                 case 4: type = "warning"; break;
                                 case 5: type = "info"; break;
+                                case 6: type = "dark"; break;
                                 default: type = "seconadry";
                             }
                             if (name == "Admin") {

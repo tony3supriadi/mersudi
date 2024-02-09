@@ -57,7 +57,8 @@
                 orderable: false,
                 render: (data, type, row, meta) => {
                     if (data.length) {
-                        return data.map((item, index) => {
+                        var html = '';
+                        data.map((item, index) => {
                             var name = item.name;
                             var type = "seconadry";
                             switch (item.id) {
@@ -66,13 +67,15 @@
                                 case 3: type = "danger"; break;
                                 case 4: type = "warning"; break;
                                 case 5: type = "info"; break;
+                                case 6: type = "dark"; break;
                                 default: type = "seconadry";
                             }
                             if (name == 'Admin') {
                                 name = 'Administrator';
                             }
-                            return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-' + type + ' m-1">' + name + '</span></a>';
+                            html += '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-' + type + ' m-1">' + name + '</span></a>';
                         });
+                        return html;
                     }
                     return '-';
                 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('m_kolat', function (Blueprint $table) {
             $table->id();
-            $table->string('kode', 4)->unique();
+            $table->string('kode', 10)->unique();
             $table->string('nama');
             $table->text('alamat_sekretariat')->nullable();
             $table->json('latlng')->nullable();

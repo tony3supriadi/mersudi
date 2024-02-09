@@ -124,36 +124,33 @@
                 width: 30,
                 className: "text-end",
                 render: (data, type, row, meta) => {
-                    if (row.id > 1) {
-                        return (`
-                            @canany(['master-daerah-update', 'master-daerah-delete'])
-                                <div class="d-inline-flex">
-                                    <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <span class="ti ti-dots-vertical"></span>
+                    return (`
+                        @canany(['master-daerah-update', 'master-daerah-delete'])
+                            <div class="d-inline-flex">
+                                <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <span class="ti ti-dots-vertical"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="{{ route('master.daerah.index') }}/${row.id}" class="dropdown-item">
+                                        <span class="ti ti-eye"></span> Detail
                                     </a>
 
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="{{ route('master.daerah.index') }}/${row.id}" class="dropdown-item">
-                                            <span class="ti ti-eye"></span> Detail
+                                    @can('master-daerah-update')
+                                        <a href="{{ route('master.daerah.index') }}/${row.id}/edit" class="dropdown-item">
+                                            <span class="ti ti-edit"></span> Ubah
                                         </a>
+                                    @endcan
 
-                                        @can('master-daerah-update')
-                                            <a href="{{ route('master.daerah.index') }}/${row.id}/edit" class="dropdown-item">
-                                                <span class="ti ti-edit"></span> Ubah
-                                            </a>
-                                        @endcan
-
-                                        @can('master-daerah-delete')
-                                            <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
-                                                <span class="ti ti-trash"></span> Hapus
-                                            </a>
-                                        @endcan
-                                    </div>
+                                    @can('master-daerah-delete')
+                                        <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
+                                            <span class="ti ti-trash"></span> Hapus
+                                        </a>
+                                    @endcan
                                 </div>
-                            @endcanany
-                        `);
-                    }
-                    return "";
+                            </div>
+                        @endcanany
+                    `);
                 }
             }],
             buttons: [

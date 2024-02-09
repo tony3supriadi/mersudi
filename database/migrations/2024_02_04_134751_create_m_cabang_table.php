@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('m_cabang', function (Blueprint $table) {
             $table->id();
-            $table->char('kode', 3)->unique();
+            $table->string('kode', 8)->unique();
             $table->string('nama');
             $table->text('alamat_sekretariat')->nullable();
             $table->json('latlng')->nullable();

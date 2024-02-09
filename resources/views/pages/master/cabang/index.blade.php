@@ -5,6 +5,7 @@
 @section('content')
 <h4 class="mb-3">Daftar Cabang</h4>
 
+@if(!Auth::user()->hasAnyRole(['Pengda', 'Pengcab', 'Anggota']))
 <div class="row g-4 mb-2 text-secondary">
     <div class="col-md-12 d-flex align-items-center">
         <div class="d-inline-flex align-items-center me-2">
@@ -26,6 +27,7 @@
         </a>
     </div>
 </div>
+@endif
 
 <div class="row g-4">
     <div class="col-12">
@@ -129,7 +131,7 @@
                 data: "daerah.nama",
                 title: "Pengda",
                 orderable: false,
-                width: 180,
+                visible: false,
                 render: (data, type, row, meta) => {
                     return row.daerah.nama.replace('PENGDA ', '');
                 }

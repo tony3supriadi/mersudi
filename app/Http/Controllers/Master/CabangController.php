@@ -8,6 +8,7 @@ use App\Models\MDaerah;
 use App\Models\User;
 use App\Models\Wilayah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -35,6 +36,12 @@ class CabangController extends Controller
             $query = MCabang::with('daerah')->where('status', "1")
                 ->orderBy('daerah_id')
                 ->orderBy('kode');
+
+            if(Auth::user()->hasRole('Pengda')) {
+                $daerah = MDaerah::where('user_id', Auth::user()->id)->first();
+                $query->where('daerah_id', $daerah->id);
+            }
+
             return DataTables::eloquent($query)
                 ->filter(function ($query) use ($request) {
                     if ($request->has('pengda') && $request->pengda != '') {
@@ -65,7 +72,7 @@ class CabangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode' => 'required|string|min:3|max:4|unique:m_cabang,kode',
+            'kode' => 'required|string|min:5|max:6|unique:m_cabang,kode',
             'nama' => 'required|max:255',
             'daerah_id' => 'required',
             'email' => 'required|email|max:255|unique:users,email',
@@ -119,7 +126,7 @@ class CabangController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'kode' => 'required|string|min:3|max:4|unique:m_cabang,kode,' . $id,
+            'kode' => 'required|string|min:5|max:6|unique:m_cabang,kode,' . $id,
             'nama' => 'required|max:255',
             'daerah_id' => 'required',
         ], [], [

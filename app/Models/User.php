@@ -46,4 +46,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function daerah()
+    {
+        return $this->belongsTo(MDaerah::class);
+    }
+
+    public function cabang()
+    {
+        return $this->belongsTo(MCabang::class);
+    }
 }

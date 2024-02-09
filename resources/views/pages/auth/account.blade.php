@@ -58,6 +58,32 @@
                 </div>
             </div>
 
+            @if(Auth::user()->hasRole('Pengda'))
+                <hr />
+                @php $daerah = App\Models\MDaerah::where('user_id', Auth::user()->id)->first(); @endphp
+                <input type="hidden" name="daerah_id" value="{{ $cabang->id }}" />
+
+                <div class="form-group mb-3" data-field="daerah">
+                    <label for="daerah" class="form-label">Alamat Sekretariat</label>
+                    <textarea name="alamat_sekretariat" id="alamat_sekretariat" class="form-control resize-none">{{ $daerah->alamat_sekretariat }}</textarea>
+                </div>
+
+                @include('components.form-map', ['latlng' => $cabang->latlng])
+            @endif
+
+            @if(Auth::user()->hasRole('Pengcab'))
+                <hr />
+                @php $cabang = App\Models\MCabang::where('user_id', Auth::user()->id)->first(); @endphp
+                <input type="hidden" name="cabang_id" value="{{ $cabang->id }}" />
+
+                <div class="form-group mb-3" data-field="daerah">
+                    <label for="daerah" class="form-label">Alamat Sekretariat</label>
+                    <textarea name="alamat_sekretariat" id="alamat_sekretariat" class="form-control resize-none">{{ $cabang->alamat_sekretariat }}</textarea>
+                </div>
+
+                @include('components.form-map', ['latlng' => $cabang->latlng])
+            @endif
+
             <div class="mt-2">
                 <button type="submit" class="btn btn-primary me-2">Simpan Perubahan</button>
             </div>

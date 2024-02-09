@@ -36,18 +36,22 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHDgTgLQShXW2W32kojOEbehp2Vo8w1XY&callback=initMap" async defer></script>
 <script type="text/javascript">
     var map, marker, locations = null;
-    var $latlng = @if(isset($latlng)) @json($latlng) @else null @endif;
+    var $latlng = @if(isset($latlng)) @json($latlng) @else {lat: -6.200000, lng: 106.816666} @endif;
     $(function() {
         if ($latlng != null) {
-            locations = {
-                lat: parseFloat($latlng['lat']),
-                lng: parseFloat($latlng['lng'])
-            };
-            initMap();
-            setMarker();
+            if ($latlng.lat != null && $latlng.lng != null) {
+                locations = {
+                    lat: parseFloat($latlng['lat']),
+                    lng: parseFloat($latlng['lng'])
+                };
+                initMap();
+                setMarker();
 
-            $('#latlng-lat').val($latlng.lat);
-            $('#latlng-lng').val($latlng.lng);
+                $('#latlng-lat').val($latlng.lat);
+                $('#latlng-lng').val($latlng.lng);
+            } else {
+                getLatlng();
+            }
         } else {
             getLatlng();
         }

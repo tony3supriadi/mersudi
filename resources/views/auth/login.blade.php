@@ -40,11 +40,16 @@
                     <form action="{{ route('login') }}" method="POST" id="formAuthentication" class="mb-3">
                         @csrf
 
-                        <div class="mb-3">
+                        <div class="form-group mb-3" data-field="email">
                             <label for="email" class="form-label">E-Mail</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="john@example.com" autofocus autocomplete="off" />
+                            <input type="text" class="form-control" id="email" name="email" placeholder="john@merpatiputih.id" value="{{ old('email') }}" autofocus autocomplete="off" />
+                            @error('email')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <div class="mb-3 form-password-toggle">
+                        <div class="form-group mb-3 form-password-toggle" data-field="password">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
                                 <a href="{{ route('password.request') }}">
@@ -55,6 +60,11 @@
                                 <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                                 <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
                             </div>
+                            @error('password')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <div class="form-check">

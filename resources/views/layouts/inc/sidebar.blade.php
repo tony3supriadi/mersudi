@@ -38,35 +38,45 @@
                         </li>
                     @endcan
 
+                    @can('master-cabang')
                     <li class="menu-item @if(request()->routeIs('master.cabang.*')) active @endif">
                         <a href="{{ route('master.cabang.index') }}" class="menu-link">
                             <div data-i18n="Cabang">Cabang</div>
                         </a>
                     </li>
+                    @endcan
 
+                    @can('master-kolat')
                     <li class="menu-item @if(request()->routeIs('master.kolat.*')) active @endif">
                         <a href="{{ route('master.kolat.index') }}" class="menu-link">
                             <div data-i18n="Kolat">Kolat</div>
                         </a>
                     </li>
+                    @endcan
 
+                    @can('master-tingkatan')
                     <li class="menu-item @if(request()->routeIs('master.tingkatan.*')) active @endif">
                         <a href="{{ route('master.tingkatan.index') }}" class="menu-link">
                             <div data-i18n="Tingkatan">Tingkatan</div>
                         </a>
                     </li>
+                    @endcan
 
+                    @can('master-kta')
                     <li class="menu-item @if(request()->routeIs('master.kta.*')) active @endif">
                         <a href="{{ route('master.kta.index') }}" class="menu-link">
                             <div data-i18n="KTA">KTA</div>
                         </a>
                     </li>
+                    @endcan
 
+                    @can('master-signature')
                     <li class="menu-item @if(request()->routeIs('master.signature.*')) active @endif">
                         <a href="{{ route('master.signature.index') }}" class="menu-link">
                             <div data-i18n="Signature">Signature</div>
                         </a>
                     </li>
+                    @endcan
                 </ul>
             </li>
         @endcanany

@@ -5,6 +5,7 @@
 @section('content')
 <h4 class="mb-3">Daftar Kolat</h4>
 
+@if(!Auth::user()->hasAnyRole(['Pengcab', 'Anggota']))
 <div class="row g-4 mb-2 text-secondary">
     <div class="col-md-12 d-flex align-items-center">
         <div class="d-inline-flex align-items-center me-2">
@@ -12,6 +13,7 @@
             <span>Filter:</span>
         </div>
 
+        @if(!Auth::user()->hasAnyRole(['Pengda']))
         <div class="d-inline-block w-px-200">
             <select name="pengda" data-placeholder="DAFTAR PENGDA" class="form-select select2">
                 <option value=""></option>
@@ -20,6 +22,7 @@
                 @endforeach
             </select>
         </div>
+        @endif
 
         <div class="d-inline-block w-px-200 ms-2">
             <select name="cabang" data-placeholder="DAFTAR CABANG" class="form-select select2">
@@ -32,6 +35,7 @@
         </a>
     </div>
 </div>
+@endif
 
 <div class="row g-4">
     <div class="col-12">
@@ -136,7 +140,7 @@
                 data: "daerah.nama",
                 title: "Pengda",
                 orderable: false,
-                width: 150,
+                visible: false,
                 render: (data, type, row, meta) => {
                     return row.daerah.nama.replace('PENGDA ', '');
                 }
@@ -145,7 +149,7 @@
                 data: "cabang.nama",
                 title: "Cabang",
                 orderable: false,
-                width: 150,
+                visible: false,
                 render: (data, type, row, meta) => {
                     return row.cabang.nama.replace('CABANG ', '');
                 }
@@ -178,36 +182,33 @@
                 width: 30,
                 className: "text-end",
                 render: (data, type, row, meta) => {
-                    if (row.id > 1) {
-                        return (`
-                            @canany(['master-kolat-update', 'master-kolat-delete'])
-                                <div class="d-inline-flex">
-                                    <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <span class="ti ti-dots-vertical"></span>
+                    return (`
+                        @canany(['master-kolat-update', 'master-kolat-delete'])
+                            <div class="d-inline-flex">
+                                <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <span class="ti ti-dots-vertical"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="{{ route('master.kolat.index') }}/${row.id}" class="dropdown-item">
+                                        <span class="ti ti-eye"></span> Detail
                                     </a>
 
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="{{ route('master.kolat.index') }}/${row.id}" class="dropdown-item">
-                                            <span class="ti ti-eye"></span> Detail
+                                    @can('master-kolat-update')
+                                        <a href="{{ route('master.kolat.index') }}/${row.id}/edit" class="dropdown-item">
+                                            <span class="ti ti-edit"></span> Ubah
                                         </a>
+                                    @endcan
 
-                                        @can('master-kolat-update')
-                                            <a href="{{ route('master.kolat.index') }}/${row.id}/edit" class="dropdown-item">
-                                                <span class="ti ti-edit"></span> Ubah
-                                            </a>
-                                        @endcan
-
-                                        @can('master-kolat-delete')
-                                            <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
-                                                <span class="ti ti-trash"></span> Hapus
-                                            </a>
-                                        @endcan
-                                    </div>
+                                    @can('master-kolat-delete')
+                                        <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
+                                            <span class="ti ti-trash"></span> Hapus
+                                        </a>
+                                    @endcan
                                 </div>
-                            @endcanany
-                        `);
-                    }
-                    return "";
+                            </div>
+                        @endcanany
+                    `);
                 }
             }],
             buttons: [

@@ -8,6 +8,7 @@ use App\Models\MDaerah;
 use App\Models\MKolat;
 use App\Models\Wilayah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -37,6 +38,17 @@ class KolatController extends Controller
                 ->orderBy('daerah_id')
                 ->orderBy('cabang_id')
                 ->orderBy('kode');
+
+            if (Auth::user()->hasRole('Pengda')) {
+                $daerah = MDaerah::where('user_id', Auth::user()->id)->first();
+                $query->where('daerah_id', $daerah->id);
+            }
+
+            if (Auth::user()->hasRole('Pengcab')) {
+                $cabang = MCabang::where('user_id', Auth::user()->id)->first();
+                $query->where('cabang_id', $cabang->id);
+            }
+
             return DataTables::eloquent($query)
                 ->filter(function ($query) use ($request) {
                     if ($request->has('pengda') && $request->pengda != '') {
@@ -75,7 +87,7 @@ class KolatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode' => 'required|string|min:4|max:6|unique:m_kolat,kode',
+            'kode' => 'required|string|min:8|max:10|unique:m_kolat,kode',
             'nama' => 'required|max:255',
             'daerah_id' => 'required',
             'cabang_id' => 'required',
@@ -129,7 +141,7 @@ class KolatController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'kode' => 'required|string|min:4|max:6|unique:m_kolat,kode,' . $id,
+            'kode' => 'required|string|min:8|max:10|unique:m_kolat,kode,' . $id,
             'nama' => 'required|max:255',
             'daerah_id' => 'required',
             'cabang_id' => 'required',
