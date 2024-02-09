@@ -15,14 +15,26 @@ use function Ramsey\Uuid\v1;
 class RoleController extends Controller
 {
     /**
+     * Construct.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:roles|roles-create|roles-edit|roles-delete', ['only' => ['index']]);
+        $this->middleware('permission:roles-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:roles-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:roles-delete', ['only' => ['destroy']]);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         if (request()->ajax()) {
-            $roles = Role::with('users')->get();
-            $resource = RoleResource::collection($roles);
-            return DataTables::of($resource)->toJson();
+            $roles = Role::with(['users', 'permissions']);
+            return DataTables::of($roles)->toJson();
         }
         return view('pages.auth.roles.index');
     }
@@ -104,11 +116,7 @@ class RoleController extends Controller
     public function destroy(Request $request)
     {
         $ids = explode(",", $request->ids);
-        foreach ($ids as $id) {
-            $role = Role::find($id);
-            $role->delete();
-        }
-
+        Role::whereIn('id', $ids)->delete();
         return response()->json([
             "status" => "success",
             "data" => null

@@ -10,14 +10,22 @@ use Yajra\DataTables\Facades\DataTables;
 class PermissionController extends Controller
 {
     /**
+     * Construct.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:permissions', ['only' => ['index']]);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
         if (request()->ajax()) {
-            $permissions = Permission::with('roles')
-                ->whereNull('parent_id')
-                ->get();
+            $permissions = Permission::with('roles')->whereNull('parent_id');
             return DataTables::of($permissions)->make();
         }
 

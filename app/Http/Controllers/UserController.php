@@ -11,14 +11,34 @@ use Yajra\DataTables\Facades\DataTables;
 class UserController extends Controller
 {
     /**
+     * Construct.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('permission:users|users-create|users-update|users-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:users-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:users-update', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:users-delete', ['only' => ['destroy']]);
+    }
+
+    /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (request()->ajax()) {
-            $users = User::with('roles')
-                ->orderBy('name')->get();
-            return DataTables::of($users)->toJson();
+        if ($request->ajax()) {
+            $query = User::with(['roles'])->orderBy('name');
+            return DataTables::eloquent($query)
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('roles') && $request->roles != '') {
+                        $query->whereHas('roles', function ($query) use ($request) {
+                            $query->where('name', $request->roles);
+                        });
+                    }
+                })
+                ->toJson();
         }
         return view('pages.auth.users.index');
     }
@@ -117,11 +137,7 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         $ids = explode(',', $request->ids);
-        foreach ($ids as $id) {
-            $user = User::findOrFail($id);
-            $user->delete();
-        }
-
+        User::whereIn('id', $ids)->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'User deleted successfully'

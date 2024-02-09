@@ -3,10 +3,7 @@
 @section('title', 'Roles')
 
 @section('content')
-<h4 class="mb-4">Daftar Role</h4>
-<p class="mb-4">
-    Daftar role untuk memberikan akses ke beberapa module atau fitur yang ditentukan oleh aplikasi Mersudi.
-</p>
+<h4 class="mb-3">Daftar Role</h4>
 
 <div class="row g-4">
     <div class="col-12">
@@ -45,7 +42,6 @@
 @push('scripts')
 <script type="text/javascript">
     let ids = [];
-
     $(function() {
         $('.datatable').DataTable({
             ajax: "{{ route('roles.index') }}",
@@ -85,20 +81,33 @@
                 title: "ID",
                 searchable: false,
                 visible: false,
-                orderable: false
+                orderable: false,
+                width: 200,
             }, {
                 data: "name",
                 title: "Roles",
-                width: 300,
                 orderable: false
             }, {
                 data: "users",
                 title: "Users",
                 searchable: false,
                 orderable: false,
+                width: 100,
                 render: (data, type, row, meta) => {
                     var userCount = data.length ?? 0
                     return `<a href="{{ route('users.index') }}?role=${row.name}">${userCount} users</a>`;
+                }
+            }, {
+                data: 'permissions',
+                title: 'Permissions',
+                searchable: false,
+                orderable: false,
+                render: (data, type, row, meta) => {
+                    var results = [];
+                    data.forEach(permission => {
+                        results.push(permission.label);
+                    });
+                    return `<div class="d-block line-height-1">${results.join(', ')}</div>`;
                 }
             }, {
                 data: "created_at",
@@ -117,74 +126,92 @@
                 render: (data, type, row, meta) => {
                     if (row.id > 1) {
                         return (`
-                            <div class="d-inline-flex">
-                                <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <span class="ti ti-dots-vertical"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="{{ route('roles.index') }}/${row.id}/edit" class="dropdown-item">
-                                        <span class="ti ti-edit"></span> Ubah
+                            @canany(['roles-update', 'roles-delete'])
+                                <div class="d-inline-flex">
+                                    <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <span class="ti ti-dots-vertical"></span>
                                     </a>
 
-                                    <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
-                                        <span class="ti ti-trash"></span> Hapus
-                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        @can('roles-update')
+                                            <a href="{{ route('roles.index') }}/${row.id}/edit" class="dropdown-item">
+                                                <span class="ti ti-edit"></span> Ubah
+                                            </a>
+                                        @endcan
+
+                                        @can('roles-delete')
+                                            <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
+                                                <span class="ti ti-trash"></span> Hapus
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </div>
-                            </div>
+                            @endcanany
                         `);
                     }
                     return "";
                 }
             }],
-            buttons: [{
-                // Desktop
-                text: '<span class="ti ti-plus"></span> Tambah Baru',
-                className: 'btn btn-primary d-none d-md-inline-block me-1',
-                action: (e, dt, button, config) => {
-                    window.location = "{{ route('roles.create') }}"
-                }
-            }, {
-                // Mobile
-                text: '<span class="ti ti-plus"></span>',
-                className: 'btn btn-primary btn-icon d-md-none me-1',
-                action: (e, dt, button, config) => {
-                    window.location = "{{ route('roles.create') }}"
-                }
-            }, {
-                // Desktop
-                text: '<span class="ti ti-trash"></span> Hapus Masal',
-                className: 'btn-bulk-action btn btn-danger d-none d-md-inline-block btn-divider-at-after ms-1 me-1',
-                attr: {
-                    'disabled': ''
-                }
-            }, {
-                // Mobile
-                text: '<span class="ti ti-trash"></span>',
-                className: 'btn-bulk-action btn btn-danger btn-icon d-md-none ms-1 me-1',
-                attr: {
-                    'disabled': ''
-                }
-            }, {
-                extend: 'collection',
-                className: 'btn btn-outline-secondary me-md-1 dropdown-toggle d-flex align-items-center ms-1',
-                text: '<span class="ti ti-download"></span> Export',
-                buttons: [{
-                    extend: 'csv',
-                    text: '<span class="ti ti-file-text me-1"></span>Export to CSV',
-                    className: 'dropdown-item',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
+            buttons: [
+                @can('roles-create')
+                {
+                    // Desktop
+                    text: '<span class="ti ti-plus"></span> Tambah Baru',
+                    className: 'btn btn-primary d-none d-md-inline-block me-1',
+                    action: (e, dt, button, config) => {
+                        window.location = "{{ route('roles.create') }}"
                     }
-                }, {
-                    extend: 'excel',
-                    text: '<span class="ti ti-file-spreadsheet"></span> Export to Excel',
-                    className: 'dropdown-item',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
+                },
+                {
+                    // Mobile
+                    text: '<span class="ti ti-plus"></span>',
+                    className: 'btn btn-primary btn-icon d-md-none me-1',
+                    action: (e, dt, button, config) => {
+                        window.location = "{{ route('roles.create') }}"
                     }
-                }]
-            }],
+                },
+                @endcan
+
+                @can('roles-delete')
+                {
+                    // Desktop
+                    text: '<span class="ti ti-trash"></span> Hapus Masal',
+                    className: 'btn-bulk-action btn btn-danger d-none d-md-inline-block btn-divider-at-after ms-1 me-1',
+                    attr: {
+                        'disabled': ''
+                    }
+                },
+                {
+                    // Mobile
+                    text: '<span class="ti ti-trash"></span>',
+                    className: 'btn-bulk-action btn btn-danger btn-icon d-md-none ms-1 me-1',
+                    attr: {
+                        'disabled': ''
+                    }
+                },
+                @endcan
+
+                {
+                    extend: 'collection',
+                    className: 'btn btn-outline-secondary me-md-1 dropdown-toggle d-flex align-items-center ms-1',
+                    text: '<span class="ti ti-download"></span> Export',
+                    buttons: [{
+                        extend: 'csv',
+                        text: '<span class="ti ti-file-text me-1"></span>Export to CSV',
+                        className: 'dropdown-item',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }, {
+                        extend: 'excel',
+                        text: '<span class="ti ti-file-spreadsheet"></span> Export to Excel',
+                        className: 'dropdown-item',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }]
+                }
+            ],
             rowCallback: (row, data, index) => {
                 $('td:first-child .form-check', row).on('click', function() {
                     if ($('td:first-child .form-check input').is(':checked')) {

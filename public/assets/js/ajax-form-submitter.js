@@ -1,36 +1,20 @@
 class AjaxFormSubmitter {
-
-    constructor({
-        form = "",
-        beforeSubmit = null,
-        success = null,
-        error = null,
-        removeSpinnerOnSuccess = true,
-        clearInputsOnSuccess = true,
-        scrollToError = true,
-        scrollElement = 'html, body',
-        offset = 0
-    } = {}) {
+    constructor({ form = "", beforeSubmit = null, success = null, error = null, removeSpinnerOnSuccess = true, resetFormOnSuccess = true, scrollToError = true, scrollElement = 'html, body', offset = 0 } = {}) {
         this.form = form;
         this.beforeSubmit = beforeSubmit;
         this.success = success;
         this.error = error;
         this.scrollToError = scrollToError;
-        this.clearInputsOnSuccess = clearInputsOnSuccess;
         var self = this;
         const button = $(form + ' button[type="submit"]');
         if ($(button).find(".spinner").length === 0) {
-            $(button).html('<span class="spinner me-1" role="status" aria-hidden="true"></span> ' + $(button).html());
+            $(button).html('<span class="spinner me-2" role="status" aria-hidden="true"></span> ' + $(button).html());
         }
         $(form + " .form-group").each((index, element) => {
             const field = $(element).data("field");
             if (field) {
                 if ($(element).find(".text-danger").length === 0) {
-                    $(element).append('<div><small class="text-danger error-' + field + '"></small></div>')
-                    // $(element).html($(element).html() + '<div><small class="text-danger error-' + field + '"></small></div>');
-                }
-                else{
-                    // $(element).find('.text-danger').remove()
+                    $(element).html($(element).html() + '<div><small class="text-danger error-' + field + '"></small></div>');
                 }
             }
         });
@@ -74,18 +58,14 @@ class AjaxFormSubmitter {
                         $(form + ' button[type="submit"]').prop("disabled", false);
                         $(form + " .spinner").removeClass("spinner-border spinner-border-sm");
                     }
-                    if (clearInputsOnSuccess) {
-                        self.clearInputs();
+                    if (resetFormOnSuccess) {
+                        $(form)[0].reset();
                     }
                     if (success) {
                         success(response);
                     }
                 },
-                error: function (xhr,status,error) {
-                    console.log('error');
-                    console.log(xhr);
-                    console.log(status);
-                    console.log(error);
+                error: function (xhr) {
                     $(form + ' button[type="submit"]').prop("disabled", false);
                     $(form + " .spinner").removeClass("spinner-border spinner-border-sm");
 
@@ -120,9 +100,4 @@ class AjaxFormSubmitter {
         $(this.form + " select").removeClass("is-invalid");
         $(this.form + " textarea").removeClass("is-invalid");
     }
-    clearInputs() {
-        $(this.form).find('input[type="text"], input[type="email"], textarea').val('');
-        $(this.form).find('input[type="checkbox"]').prop('checked', false);
-    }
 }
-window.AjaxFormSubmitter = AjaxFormSubmitter;

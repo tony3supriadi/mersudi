@@ -3,10 +3,29 @@
 @section('title', 'Users')
 
 @section('content')
-<h4 class="mb-4">Daftar User</h4>
-<p class="mb-4">
-    Daftar pengguna aplikasi Mersudi dengan pengelompokan berdasarkan role.
-</p>
+<h4 class="mb-3">Daftar User</h4>
+
+<div class="row g-4 mb-2 text-secondary">
+    <div class="col-md-12 d-flex align-items-center">
+        <div class="d-inline-flex align-items-center me-2">
+            <span class="ti ti-filter me-1"></span>
+            <span>Filter:</span>
+        </div>
+
+        <div class="d-inline-block w-px-150">
+            <select name="roles" class="form-select select2">
+                <option value=""></option>
+                @foreach (Spatie\Permission\Models\Role::all() as $role)
+                    <option value="{{ $role->name }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <a href="javascript:;" class="text-secondary ms-3 d-none btn-reset-filter">
+            <span>Reset filter</span>
+        </a>
+    </div>
+</div>
 
 <div class="row g-4">
     <div class="col-12">
@@ -34,21 +53,32 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 @endpush
 
 @push('vendor-scripts')
 <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script>
 <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
+<script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
 <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
 @endpush
 
 @push('scripts')
 <script type="text/javascript">
     let ids = [];
-
     $(function() {
-        $('.datatable').DataTable({
-            ajax: "{{ route('users.index') }}",
+        var table = $('.datatable').DataTable({
+            ajax: {
+                url: "{{ route('users.index') }}",
+                data: function(d) {
+                    d.roles = $('select[name="roles"]').val();
+                },
+                dataSrc: function(response) {
+                    return response.data;
+                }
+            },
             width: '100%',
             serverSide: true,
             processing: true,
@@ -102,15 +132,21 @@
                 orderable: false,
                 render: (data, type, row, meta) => {
                     if (data.length) {
-                        return data.map((item) => {
-                            if (item.name == "Admin") {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-primary m-1">Administrator</span></a>';
-                            } else
-                            if (item.name == "Anggota") {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-success m-1">' + item.name + '</span></a>';
-                            } else {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-default m-1">' + item.name + '</span></a>';
+                        return data.map((item, index) => {
+                            var name = item.name;
+                            var type = "seconadry";
+                            switch (item.id) {
+                                case 1: type = "primary"; break;
+                                case 2: type = "success"; break;
+                                case 3: type = "danger"; break;
+                                case 4: type = "warning"; break;
+                                case 5: type = "info"; break;
+                                default: type = "seconadry";
                             }
+                            if (name == "Admin") {
+                                name = "Administrator";
+                            }
+                            return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-' + type + ' m-1">' + name + '</span></a>';
                         });
                     }
                     return '-';
@@ -132,78 +168,96 @@
                 render: (data, type, row, meta) => {
                     if (row.id > 1) {
                         return (`
-                            <div class="d-inline-flex">
-                                <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                    <span class="ti ti-dots-vertical"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="{{ route('users.index') }}/${row.id}" class="dropdown-item">
-                                        <span class="ti ti-eye"></span> Detail
+                            @canany(['users-update', 'users-delete'])
+                                <div class="d-inline-flex">
+                                    <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <span class="ti ti-dots-vertical"></span>
                                     </a>
 
-                                    <a href="{{ route('users.index') }}/${row.id}/edit" class="dropdown-item">
-                                        <span class="ti ti-edit"></span> Ubah
-                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="{{ route('users.index') }}/${row.id}" class="dropdown-item">
+                                            <span class="ti ti-eye"></span> Detail
+                                        </a>
 
-                                    <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
-                                        <span class="ti ti-trash"></span> Hapus
-                                    </a>
+                                        @can('users-update')
+                                            <a href="{{ route('users.index') }}/${row.id}/edit" class="dropdown-item">
+                                                <span class="ti ti-edit"></span> Ubah
+                                            </a>
+                                        @endcan
+
+                                        @can('users-delete')
+                                            <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
+                                                <span class="ti ti-trash"></span> Hapus
+                                            </a>
+                                        @endcan
+                                    </div>
                                 </div>
-                            </div>
+                            @endcanany
                         `);
                     }
                     return "";
                 }
             }],
-            buttons: [{
-                // Desktop
-                text: '<span class="ti ti-plus"></span> Tambah Baru',
-                className: 'btn btn-primary d-none d-md-inline-block me-1',
-                action: (e, dt, button, config) => {
-                    window.location = "{{ route('users.create') }}"
-                }
-            }, {
-                // Mobile
-                text: '<span class="ti ti-plus"></span>',
-                className: 'btn btn-primary btn-icon d-md-none me-1',
-                action: (e, dt, button, config) => {
-                    window.location = "{{ route('users.create') }}"
-                }
-            }, {
-                // Desktop
-                text: '<span class="ti ti-trash"></span> Hapus Masal',
-                className: 'btn-bulk-action btn btn-danger d-none d-md-inline-block btn-divider-at-after ms-1 me-1',
-                attr: {
-                    'disabled': ''
-                }
-            }, {
-                // Mobile
-                text: '<span class="ti ti-trash"></span>',
-                className: 'btn-bulk-action btn btn-danger btn-icon d-md-none ms-1 me-1',
-                attr: {
-                    'disabled': ''
-                }
-            }, {
-                extend: 'collection',
-                className: 'btn btn-outline-secondary me-md-1 dropdown-toggle d-flex align-items-center ms-1',
-                text: '<span class="ti ti-download"></span> Export',
-                buttons: [{
-                    extend: 'csv',
-                    text: '<span class="ti ti-file-text me-1"></span>Export to CSV',
-                    className: 'dropdown-item',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
+            buttons: [
+                @can('users-create')
+                {
+                    // Desktop
+                    text: '<span class="ti ti-plus"></span> Tambah Baru',
+                    className: 'btn btn-primary d-none d-md-inline-block me-1',
+                    action: (e, dt, button, config) => {
+                        window.location = "{{ route('users.create') }}"
                     }
-                }, {
-                    extend: 'excel',
-                    text: '<span class="ti ti-file-spreadsheet"></span> Export to Excel',
-                    className: 'dropdown-item',
-                    exportOptions: {
-                        columns: [1, 2, 3, 4, 5]
+                },
+                {
+                    // Mobile
+                    text: '<span class="ti ti-plus"></span>',
+                    className: 'btn btn-primary btn-icon d-md-none me-1',
+                    action: (e, dt, button, config) => {
+                        window.location = "{{ route('users.create') }}"
                     }
-                }]
-            }],
+                },
+                @endcan
+
+                @can('users-delete')
+                {
+                    // Desktop
+                    text: '<span class="ti ti-trash"></span> Hapus Masal',
+                    className: 'btn-bulk-action btn btn-danger d-none d-md-inline-block btn-divider-at-after ms-1 me-1',
+                    attr: {
+                        'disabled': ''
+                    }
+                },
+                {
+                    // Mobile
+                    text: '<span class="ti ti-trash"></span>',
+                    className: 'btn-bulk-action btn btn-danger btn-icon d-md-none ms-1 me-1',
+                    attr: {
+                        'disabled': ''
+                    }
+                },
+                @endcan
+
+                {
+                    extend: 'collection',
+                    className: 'btn btn-outline-secondary me-md-1 dropdown-toggle d-flex align-items-center ms-1',
+                    text: '<span class="ti ti-download"></span> Export',
+                    buttons: [{
+                        extend: 'csv',
+                        text: '<span class="ti ti-file-text me-1"></span>Export to CSV',
+                        className: 'dropdown-item',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }, {
+                        extend: 'excel',
+                        text: '<span class="ti ti-file-spreadsheet"></span> Export to Excel',
+                        className: 'dropdown-item',
+                        exportOptions: {
+                            columns: [1, 2, 3, 4, 5]
+                        }
+                    }]
+                }
+            ],
             rowCallback: (row, data, index) => {
                 $('td:first-child .form-check', row).on('click', function() {
                     if ($('td:first-child .form-check input').is(':checked')) {
@@ -235,6 +289,28 @@
                     previous: "Sebelumnya"
                 }
             },
+        });
+
+        var select2 = $('.select2');
+        if (select2.length) {
+            select2.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    placeholder: 'Roles',
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
+
+        $('select[name="roles"]').change(function(){
+            table.draw();
+            $('.btn-reset-filter').removeClass('d-none');
+        });
+
+        $('.btn-reset-filter').on('click', function() {
+            $('select[name="roles"]').val('').trigger('change');
+            $('.btn-reset-filter').addClass('d-none');
+            table.draw();
         });
 
         setTimeout(() => {

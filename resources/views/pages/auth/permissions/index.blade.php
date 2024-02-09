@@ -3,8 +3,7 @@
 @section('title', 'Permissions')
 
 @section('content')
-<h4 class="mb-4">Daftar Permission</h4>
-<p class="mb-4">Daftar permission atau module atau fitur yang tersedia di aplikasi Mersudi.</p>
+<h4 class="mb-3">Daftar Permission</h4>
 
 <div class="card min-h-27vh">
     <div class="card-datatable table-responsive">
@@ -28,7 +27,6 @@
 @push('scripts')
 <script type="text/javascript">
     let ids = [];
-
     $(function() {
         $('.datatable').DataTable({
             ajax: "{{ route('permissions.index') }}",
@@ -59,15 +57,21 @@
                 orderable: false,
                 render: (data, type, row, meta) => {
                     if (data.length) {
-                        return data.map((item) => {
-                            if (item.name == "Admin") {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-primary m-1">Administrator</span></a>';
-                            } else
-                            if (item.name == "Anggota") {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-success m-1">' + item.name + '</span></a>';
-                            } else {
-                                return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-default m-1">' + item.name + '</span></a>';
+                        return data.map((item, index) => {
+                            var name = item.name;
+                            var type = "seconadry";
+                            switch (item.id) {
+                                case 1: type = "primary"; break;
+                                case 2: type = "success"; break;
+                                case 3: type = "danger"; break;
+                                case 4: type = "warning"; break;
+                                case 5: type = "info"; break;
+                                default: type = "seconadry";
                             }
+                            if (name == 'Admin') {
+                                name = 'Administrator';
+                            }
+                            return '<a href="{{ route("users.index") }}?role=' + item.name + '"><span class="badge bg-label-' + type + ' m-1">' + name + '</span></a>';
                         });
                     }
                     return '-';

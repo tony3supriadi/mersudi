@@ -2,7 +2,7 @@
     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
         <div class="avatar avatar-online">
             @if(Auth::user()->photo)
-                <img src="{{ asset('storage/avatars/' . Auth::user()->photo) }}" alt class="h-auto rounded-circle" />
+                <img src="{{ asset('storage/avatars/' . Auth::user()->photo) }}" alt class="h-px-38 w-px-38 rounded-circle object-fit-cover" />
             @else
                 <span class="avatar-initial rounded-circle bg-primary">
                     {{ initial_name(Auth::user()->name) }}
@@ -18,7 +18,7 @@
                     <div class="flex-shrink-0 me-3">
                         <div class="avatar avatar-online">
                             @if(Auth::user()->photo)
-                                <img src="{{ asset('storage/avatars/' . Auth::user()->photo) }}" alt class="h-auto rounded-circle" />
+                                <img src="{{ asset('storage/avatars/' . Auth::user()->photo) }}" alt class="h-px-38 w-px-38 rounded-circle object-fit-cover" />
                             @else
                                 <span class="avatar-initial rounded-circle bg-primary">
                                     {{ initial_name(Auth::user()->name) }}
