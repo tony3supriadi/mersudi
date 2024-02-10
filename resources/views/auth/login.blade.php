@@ -28,7 +28,7 @@
                 <div class="w-px-400 mx-auto">
                     <!-- Logo -->
                     <div class="app-brand mb-4">
-                        <a href="index.html" class="app-brand-link gap-2">
+                        <a href="" class="app-brand-link gap-2">
                             @include('components.logo')
                         </a>
                     </div>
@@ -37,12 +37,12 @@
                     <h3 class="mb-1">Selamat datang di Mersudi! 👋</h3>
                     <p class="mb-4">Silakan masuk ke akun Anda dan mulai menggunakan aplikasi.</p>
 
-                    <form action="{{ route('login') }}" method="POST" id="formAuthentication" class="mb-3">
+                    <form action="{{ route('login') }}" method="POST" id="auth-submit" class="mb-3">
                         @csrf
 
                         <div class="form-group mb-3" data-field="email">
                             <label for="email" class="form-label">E-Mail</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="john@merpatiputih.id" value="{{ old('email') }}" autofocus autocomplete="off" />
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Masukan alamat email" value="{{ old('email') }}" autofocus autocomplete="off" />
                             @error('email')
                                 <span class="invalid-feedback d-block" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -58,7 +58,7 @@
                             </div>
                             <div class="input-group input-group-merge">
                                 <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                                <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                                <span class="input-group-text cursor-pointer toggle-password" data-password="off"><i class="ti ti-eye-off"></i></span>
                             </div>
                             @error('password')
                                 <span class="invalid-feedback d-block" role="alert">
@@ -72,7 +72,9 @@
                                 <label class="form-check-label" for="remember-me"> Selalu diingat </label>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary d-grid w-100">Login</button>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
                     </form>
 
                     <p class="text-center text-sm">
@@ -107,5 +109,29 @@
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('assets/js/pages-auth.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/pages-auth.js') }}"></script> --}}
+    <script type="text/javascript">
+        new AjaxFormSubmitter({
+            form: '#auth-submit',
+            scrollToError: false,
+            success: function(response) {
+                if (response.status == "success") {
+                    window.location.href = response.redirect;
+                }
+            },
+        });
+
+        $('.form-password-toggle .toggle-password').on('click', function() {
+            var $this = $(this);
+            if ($this.data('password') == 'off') {
+                $this.data('password', 'on');
+                $this.siblings('input').attr('type', 'text');
+                $this.children().addClass('ti-eye').removeClass('ti-eye-off');
+            } else {
+                $this.data('password', 'off');
+                $this.siblings('input').attr('type', 'password');
+                $this.children().addClass('ti-eye-off').removeClass('ti-eye');
+            }
+        });
+    </script>
 @endpush
