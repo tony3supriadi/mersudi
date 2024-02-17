@@ -2,10 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        // $user = User::find();
+        // if ($user->hasRole('Anggota')) {
+            $this->middleware('anggota');
+        // }
+    }
+
     /**
      * Show the application dashboard.
      *

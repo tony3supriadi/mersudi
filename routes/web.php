@@ -21,6 +21,18 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::group([
+        'prefix' => 'anggota',
+        'as' => 'anggota.'
+    ], function () {
+        Route::get('pemutakhiran/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb'])->name('pemutakhiran.oldb');
+        Route::post('pemutakhiran/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb_submit']);
+
+        Route::group(['middleware' => ['anggota']], function() {
+            Route::get('pemutakhiran', [App\Http\Controllers\Anggota\RegistrasiController::class, 'index'])->name('pemutakhiran');
+        });
+    });
+
+    Route::group([
         'prefix' => 'master',
         'as' => 'master.',
     ], function () {
@@ -148,7 +160,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
 });
-
 
 Route::group([
     'prefix' => 'ajax',

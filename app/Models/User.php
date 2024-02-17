@@ -60,4 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(MCabang::class);
     }
+
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class);
+    }
 }

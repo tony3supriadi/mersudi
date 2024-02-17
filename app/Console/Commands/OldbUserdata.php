@@ -31,6 +31,15 @@ class OldbUserdata extends Command
             ->groupBy('agt_id', 'agt_email')
             ->limit(10)
             ->get();
-        dd("JANGAN DULU DIIMPLEMENT!");
+
+        foreach ($users as $user) {
+            DB::table('users')->insert([
+                'email' => $user->agt_email,
+                'name' => $user->agt_nama,
+                'password' => bcrypt('12345678'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

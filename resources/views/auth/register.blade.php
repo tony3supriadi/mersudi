@@ -43,7 +43,7 @@
                     @csrf
 
                     <div class="form-group mb-3" data-field="name">
-                        <label for="name" class="form-label">Nama</label>
+                        <label for="name" class="form-label">Nama Langkap</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Masukan nama lengkap" autofocus />
                     </div>
                     <div class="form-group mb-3" data-field="email">

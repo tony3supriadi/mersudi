@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('latlng')->nullable();
             $table->enum('status', [0, 1, 2])->default(1)->nullable();
             $table->longText('keterangan')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
             $table->foreignId('daerah_id')->nullable()->constrained('m_daerah')->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

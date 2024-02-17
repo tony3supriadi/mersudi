@@ -12,3 +12,17 @@ if (!function_exists('initial_name')) {
         return implode("", $init_name);
     }
 }
+
+if (!function_exists('get_setting')) {
+    function get_setting($name)
+    {
+        $query = \App\Models\Setting::where('name', $name);
+        if ($query->count() > 0) {
+            return $query->first()->value;
+        } else if ($query->count() > 1) {
+            return $query->pluck('value')->toArray();
+        } else {
+            return null;
+        }
+    }
+}
