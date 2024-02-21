@@ -66,4 +66,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Anggota::class);
     }
+
+    public function markEmailAsVerified()
+    {
+        return true;
+    }
 }
