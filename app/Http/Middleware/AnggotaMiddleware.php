@@ -20,39 +20,43 @@ class AnggotaMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
-        if ($user->hasRole('Anggota')) {
-            $anggota = Anggota::where('user_id', $user->id)->count();
-            if ($user->datatype == null) {
-                if ($anggota == 0) {
-                    $oldb_anggota = DB::table('oldb_anggota')
-                        ->where('agt_email', $user->email)
-                        ->count();
+        $anggota = Anggota::where('user_id', $user->id);
+        $anggota_oldb = DB::connection('mysql_oldb')
+            ->table('anggota')
+            ->where('agt_email', $user->email)
+            ->exists();
 
-                    if ($oldb_anggota == 1) {
-                        return redirect()->route('anggota.pemutakhiran.oldb');
+        if ($user->hasRole('Anggota')) {
+
+            if ($user->datatype == null) {
+                if ($anggota->count() == 0) {
+                    if ($anggota_oldb) {
+                        return redirect()->route('anggota.registrasi.oldb');
                     } else {
                         $user->update([
                             'datatype' => User::USER_NEW_DATATYPE,
                         ]);
-                        return redirect()->route('anggota.pemutakhiran');
+                        return redirect()->route('anggota.registrasi');
                     }
-                } else {
-                    return redirect()->route('dashboard');
                 }
             } else {
-                if ($anggota == 0) {
-                    if (request()->routeIs('anggota.pemutakhiran')) {
-                        return $next($request);
-                    } else {
-                        return redirect()->route('anggota.pemutakhiran');
-                    }
+                if ($anggota->count() == 0) {
+                    return redirect()->route('anggota.registrasi');
                 } else {
-                    return redirect()->route('dashboard');
+                    $data_anggota = $anggota->first();
+                    if ($data_anggota->status != 3) {
+                        if ($data_anggota->hasKta()) {
+                            return $next($request);
+                        } else {
+                            return redirect()->route('anggota.registrasi.step03');
+                        }
+                    } else {
+                        return redirect()->route('anggota.registrasi.step02');
+                    }
                 }
             }
-            return $next($request);
         } else {
-            abort(404);
+            return $next($request);
         }
     }
 }

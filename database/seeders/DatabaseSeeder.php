@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MasterSeeder::class);
         $this->call(MTingkatanSeeder::class);
         $this->call(MKtaSeeder::class);
+        $this->call(SignatureSeeder::class);
     }
 }

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('anggota_log_verify', function (Blueprint $table) {
+        Schema::create('anggota_has_kta_log', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('anggota_id')->constrained('anggota')->cascadeOnDelete();
-            $table->enum('status', [0, 1, 2, 3])->default(3); // [0: Validasi, 1: Aktif, 2: Ditolak, 3: Uncomplete]
+            $table->foreignId('anggota_has_kta_id')->constrained('anggota_has_kta')->cascadeOnDelete();
+            $table->enum('status', [0, 1, 2])->default(0); // [0: Validasi, 1: Aktif, 2: Ditolak]
             $table->longText('keterangan')->nullable();
             $table->foreignId('verified_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('anggota_log_verify');
+        Schema::dropIfExists('anggota_has_kta_log');
     }
 };

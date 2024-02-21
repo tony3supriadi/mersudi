@@ -15,10 +15,7 @@ class DashboardController extends Controller
      */
     public function __construct()
     {
-        // $user = User::find();
-        // if ($user->hasRole('Anggota')) {
-            $this->middleware('anggota');
-        // }
+        $this->middleware('anggota');
     }
 
     /**

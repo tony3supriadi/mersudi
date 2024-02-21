@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MCabang;
 use App\Models\MDaerah;
 use App\Models\MKolat;
+use App\Models\Wilayah;
 use Illuminate\Http\Request;
 
 class AjaxController extends Controller
@@ -36,5 +37,29 @@ class AjaxController extends Controller
         }
         $kolat = $kolat->get();
         return response()->json($kolat);
+    }
+
+    public function provinces()
+    {
+        $provinces = Wilayah::provinces();
+        return response()->json($provinces);
+    }
+
+    public function cities(Request $request)
+    {
+        $cities = Wilayah::cities($request->get('kode'));
+        return response()->json($cities);
+    }
+
+    public function districts(Request $request)
+    {
+        $districts = Wilayah::districts($request->get('kode'));
+        return response()->json($districts);
+    }
+
+    public function villages(Request $request)
+    {
+        $villages = Wilayah::villages($request->get('kode'));
+        return response()->json($villages);
     }
 }

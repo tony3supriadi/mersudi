@@ -3,37 +3,21 @@
 @section('title', 'Verifikasi Email')
 
 @section('content')
-    <div class="authentication-wrapper authentication-cover authentication-bg">
-        <div class="authentication-inner row">
-            <div class="d-none d-lg-flex col-lg-7 p-0">
-                <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
-                    <img src="{{ asset('assets/img/illustrations/auth-verify-email-illustration-light.png') }}"
-                        alt="auth-verify-email-cover"
-                        class="img-fluid my-5 auth-illustration"
-                        data-app-light-img="illustrations/auth-verify-email-illustration-light.png"
-                        data-app-dark-img="illustrations/auth-verify-email-illustration-dark.png" />
-
-                    <img src="{{ asset('assets/img/illustrations/bg-shape-image-light.png') }}"
-                        alt="auth-verify-email-cover"
-                        class="platform-bg"
-                        data-app-light-img="illustrations/bg-shape-image-light.png"
-                        data-app-dark-img="illustrations/bg-shape-image-dark.png" />
-                </div>
-            </div>
-
-            <div class="d-flex col-12 col-lg-5 align-items-center p-4 p-sm-5">
-                <div class="w-px-400 mx-auto">
-                    <div class="app-brand mb-4">
+    <div class="authentication-wrapper authentication-basic px-4">
+        <div class="authentication-inner py-4">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="app-brand justify-content-center mb-4 mt-2">
                         <a href="" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">
-                                @include('components.logo')
-                            </span>
+                            @include('components.logo')
+                            <span class="app-brand-text demo text-body fw-bold ms-1">Mersudi App</span>
                         </a>
                     </div>
+                    <!-- /Logo -->
 
-                    <h3 class="mb-1">Verifikasi emailmu ✉️</h3>
-
-                    <p class="text-start mb-4">Link aktifasi sudah dikirim ke email: <a href="#">{{ Auth::user()->email }}</a> <br />Silahkan cek email dan ikuti langkah selanjutnya!</p>
+                    <h3 class="mb-1 pt-2">Verifikasi email ✉️</h3>
+                    <p class="text-start mb-4">Link verifikasi sudah dikirim ke email: <a href="#">{{ Auth::user()->email }}</a> <br />Silahkan cek email untuk mengaktifkan akun!</p>
 
                     <hr />
 
@@ -44,20 +28,13 @@
 
                     @if (session('resent'))
                         <div class="alert alert-success" role="alert">
-                            Kirim ulang link verifikasi email berhasil dikirim.
+                            Link verifikasi berhasil dikirim ulang.
                         </div>
                     @endif
 
                     <form id="resend-submit" class="d-inline" method="POST" action="{{ route('verification.resend') }}">
                         @csrf
                     </form>
-
-                    {{-- <div class="mt-5">
-                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </div> --}}
                 </div>
             </div>
         </div>

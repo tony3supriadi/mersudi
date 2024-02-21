@@ -24,11 +24,20 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'prefix' => 'anggota',
         'as' => 'anggota.'
     ], function () {
-        Route::get('pemutakhiran/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb'])->name('pemutakhiran.oldb');
-        Route::post('pemutakhiran/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb_submit']);
+        Route::get('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb'])->name('registrasi.oldb');
+        Route::post('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb_submit']);
+
+        Route::get('registrasi', [App\Http\Controllers\Anggota\RegistrasiController::class, 'index'])->name('registrasi');
+        Route::post('registrasi/step-1', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_01'])->name('registrasi.submit');
+
+        Route::get('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step02'])->name('registrasi.step02');
+        Route::post('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_02'])->name('registrasi.step02.submit');
+
+        Route::get('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step03'])->name('registrasi.step03');
+        Route::post('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_03'])->name('registrasi.step03.submit');
 
         Route::group(['middleware' => ['anggota']], function() {
-            Route::get('pemutakhiran', [App\Http\Controllers\Anggota\RegistrasiController::class, 'index'])->name('pemutakhiran');
+
         });
     });
 
@@ -168,4 +177,9 @@ Route::group([
     Route::get('daerah', [App\Http\Controllers\Ajax\AjaxController::class, 'getDaerah'])->name('daerah');
     Route::get('cabang/{code?}', [App\Http\Controllers\Ajax\AjaxController::class, 'getCabang'])->name('cabang');
     Route::get('kolat/{code?}', [App\Http\Controllers\Ajax\AjaxController::class, 'getKolat'])->name('kolat');
+
+    Route::get('provinces', [App\Http\Controllers\Ajax\AjaxController::class, 'provinces'])->name('provinces');
+    Route::get('cities', [App\Http\Controllers\Ajax\AjaxController::class, 'cities'])->name('cities');
+    Route::get('districts', [App\Http\Controllers\Ajax\AjaxController::class, 'districts'])->name('districts');
+    Route::get('villages', [App\Http\Controllers\Ajax\AjaxController::class, 'villages'])->name('villages');
 });

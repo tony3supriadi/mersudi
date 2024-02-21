@@ -18,4 +18,24 @@ class MSignature extends Model
         'aktif',
         'keterangan'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('aktif', 1);
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('aktif', 0);
+    }
+
+    public function scopeKetum($query)
+    {
+        return $query->active()->where('jabatan', 'Katua Umum');
+    }
+
+    public function scopeAw($query)
+    {
+        return $query->where('aktif', 1)->active()->where('jabatan', 'Ahli Waris');
+    }
 }

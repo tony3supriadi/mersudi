@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin@merpatiputih.id',
             'password' => Hash::make('P@$sw0rd'),
+            'email_verified_at' => now(),
         ]);
         $role = Role::create(['name' => 'Admin']);
         $permissions = Permission::pluck('id', 'id')->all();

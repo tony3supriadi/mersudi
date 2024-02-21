@@ -14,12 +14,14 @@ class Anggota extends Model
     public const STATUS_VERIFY = "0";
     public const STATUS_ACTIVE = "1";
     public const STATUS_DENIED = "2";
+    public const STATUS_UNCOMPLETE = "3";
 
     protected $table = 'anggota';
     protected $fillable = [
         'user_id',
         'nomor_urut_registrasi',
-        'nomor_anggota',
+        'nomor_urut_anggota',
+        'nia',
         'nik',
         'scan_ktp',
         'nama_lengkap',
@@ -167,8 +169,32 @@ class Anggota extends Model
         return $this->belongsTo(Wilayah::class, 'desa_id');
     }
 
+    public function kta()
+    {
+        return $this->hasMany(AnggotaHasKta::class, 'anggota_id');
+    }
+
+    public function hasKta() {
+        return $this->kta()->count();
+    }
+
+    public function invoice()
+    {
+        return $this->hasMany(AnggotaInvoice::class, 'anggota_id');
+    }
+
     public function getUsiaAttribute()
     {
         return $this->tanggal_lahir->diffInyears(now());
+    }
+
+    public function fullCompleteRegister()
+    {
+        return $this->whereNotNull('daerah_id')
+            ->whereNotNull('cabang_id')
+            ->whereNotNull('kolat_id')
+            ->whereNotNull('tingkatan_id')
+            ->whereNotNull('tanggal_bergabung')
+            ->count() > 0;
     }
 }

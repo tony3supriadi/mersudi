@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('anggota', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->unsignedBigInteger('nomor_urut_registrasi')->unique();
-            $table->string('nomor_anggota', 16)->nullable(); // ex: 12.021.0000001
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->unsignedBigInteger('nomor_urut_registrasi')->unique(); // ex 1
+            $table->string('nomor_urut_anggota', 16)->unique(); // ex 0000001 -> bisa request
+            $table->string('nia', 16)->nullable(); // ex: 12.021.0000001
             $table->string('nik', 32)->nullable();
             $table->string('scan_ktp')->nullable();
             $table->string('nama_lengkap');
@@ -40,7 +41,7 @@ return new class extends Migration
             $table->foreignId('kolat_id')->nullable()->constrained('m_kolat');
             $table->foreignId('tingkatan_id')->nullable()->constrained('m_tingkatan');
             $table->date('tanggal_bergabung')->nullable();
-            $table->enum('status', [0, 1, 2])->default(1); // [0: Validasi, 1: Aktif, 2: Ditolak]
+            $table->enum('status', [0, 1, 2, 3])->default(3); // [0: Validasi, 1: Aktif, 2: Ditolak, 3: Uncomplete]
             $table->text('keterangan')->nullable();
             $table->softDeletes();
             $table->timestamps();

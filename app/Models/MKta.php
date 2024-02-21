@@ -23,4 +23,12 @@ class MKta extends Model
     {
         return $this->belongsToMany(MTingkatan::class, 'm_kta_has_tingkatan', 'kta_id', 'tingkatan_id');
     }
+
+    public function scopeWhereTingkatan($query, $id)
+    {
+        return $query->with(['tingkatan'])
+            ->whereHas('tingkatan', function($q) use ($id) {
+                $q->where('tingkatan_id', $id);
+            });
+    }
 }

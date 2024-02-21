@@ -43,6 +43,7 @@
   height: 100vh;
 }
 .authentication-wrapper.authentication-cover .authentication-inner .auth-multisteps-bg-height > img:first-child {
+  max-height: 95%;
   z-index: 1;
 }
 .authentication-wrapper.authentication-basic .authentication-inner {

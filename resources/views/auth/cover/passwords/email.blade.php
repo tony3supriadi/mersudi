@@ -3,51 +3,72 @@
 @section('title', 'Lupa Password')
 
 @section('content')
-    <div class="container-xxl">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner py-4">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Logo -->
-                        <div class="app-brand justify-content-center mb-4 mt-2">
-                            <a href="" class="app-brand-link gap-2">
+    <div class="authentication-wrapper authentication-cover authentication-bg">
+        <div class="authentication-inner row">
+            <!-- /Left Text -->
+            <div class="d-none d-lg-flex col-lg-7 p-0">
+                <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
+                    <img
+                        src="{{ asset('assets/img/illustrations/auth-forgot-password-illustration-light.png') }}"
+                        alt="auth-forgot-password-cover"
+                        class="img-fluid my-5 auth-illustration"
+                        data-app-light-img="illustrations/auth-forgot-password-illustration-light.png"
+                        data-app-dark-img="illustrations/auth-forgot-password-illustration-dark.png" />
+
+                    <img
+                        src="{{ asset('assets/img/illustrations/bg-shape-image-light.png') }}"
+                        alt="auth-forgot-password-cover"
+                        class="platform-bg"
+                        data-app-light-img="illustrations/bg-shape-image-light.png"
+                        data-app-dark-img="illustrations/bg-shape-image-dark.png" />
+                </div>
+            </div>
+            <!-- /Left Text -->
+
+            <!-- Forgot Password -->
+            <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4">
+                <div class="w-px-400 mx-auto">
+                    <!-- Logo -->
+                    <div class="app-brand mb-4">
+                        <a href="#" class="app-brand-link gap-2">
+                            <span class="app-brand-logo demo">
                                 @include('components.logo')
-                                <span class="app-brand-text demo text-body fw-bold ms-1">Mersudi App</span>
-                            </a>
-                        </div>
-                        <!-- /Logo -->
+                            </span>
+                        </a>
+                    </div>
+                    <!-- /Logo -->
 
-                        <h3 class="mb-1 pt-2">Lupa Password? 🔒</h3>
-                        <p class="mb-4">Masukan alamat email untuk bisa mengatur ulang password.</p>
+                    <h3 class="mb-1">Lupa Password? 🔒</h3>
+                    <p class="mb-4">Masukan emailmu untuk mendapatkan langkah mengatur ulang password.</p>
 
-                        <form id="auth-submit" class="mb-3" method="POST" action="{{ route('password.email') }}">
-                            @csrf
+                    <form id="auth-submit" class="mb-3" method="POST" action="{{ route('password.email') }}">
+                        @csrf
 
-                            <div class="form-group mb-3" data-field="email">
-                                <label for="email" class="form-label">E-Mail</label>
-                                <input type="text" class="form-control" id="email" name="email" placeholder="Masukan alamat email" autofocus />
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    <span>Kirim reset link</span>
-                                </button>
-                            </div>
-                        </form>
-
-                        <div class="text-center">
-                            <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center">
-                                <i class="ti ti-arrow-left me-1"></i>
-                                <small>Kembali ke login</small>
-                            </a>
+                        <div class="form-group mb-3" data-field="email">
+                            <label for="email" class="form-label">E-Mail</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Masukan data emailmu" autofocus />
                         </div>
 
-                        <div id="auth-status" class="alert alert-success mt-3 d-none" role="alert">
-                            <small>Link atur ulang password terkirim ke email.</small>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <span>Kirim reset link</span>
+                            </button>
                         </div>
+                    </form>
+
+                    <div class="text-center">
+                        <a href="{{ route('login') }}" class="d-flex align-items-center justify-content-center">
+                            <i class="ti ti-chevron-left scaleX-n1-rtl"></i>
+                            <span>Kembali ke login</span>
+                        </a>
+                    </div>
+
+                    <div id="auth-status" class="alert alert-success mt-3 d-none" role="alert">
+                        Link reset password telah dikirim ke emailmu.
                     </div>
                 </div>
             </div>
+            <!-- /Forgot Password -->
         </div>
     </div>
 @endsection

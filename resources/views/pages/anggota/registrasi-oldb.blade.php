@@ -35,7 +35,7 @@
                         <h3 class="mb-1">Oops!</h3>
                         <p class="mb-4">Kami menemukan email: {{ Auth::user()->email }} di mersudi v1. Apakah akan menggunakan data ini?</p>
 
-                        <form accept="{{ route('anggota.pemutakhiran.oldb') }}" id="form-submit-1" method="POST">
+                        <form accept="{{ route('anggota.registrasi.oldb') }}" id="form-submit-1" method="POST">
                             @csrf
                             <input type="hidden" name="datatype" value="{{ App\Models\User::USER_OLD_DATATYPE }}" />
                             <div class="d-grid gap-2 mb-3">
@@ -45,7 +45,7 @@
                             </div>
                         </form>
 
-                        <form accept="{{ route('anggota.pemutakhiran.oldb') }}" id="form-submit-0" method="POST">
+                        <form accept="{{ route('anggota.registrasi.oldb') }}" id="form-submit-0" method="POST">
                             @csrf
                             <input type="hidden" name="datatype" value="{{ App\Models\User::USER_NEW_DATATYPE }}" />
                             <div class="d-grid gap-2">

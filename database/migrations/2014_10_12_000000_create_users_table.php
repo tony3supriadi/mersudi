@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('datatype', [0, 1])->nullable();
             $table->string('photo')->nullable();
+            $table->boolean('active')->default(true);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

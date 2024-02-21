@@ -127,3 +127,7 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+input:read-only {
+  background-color: #f2f2f3;
+}

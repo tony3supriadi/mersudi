@@ -26,10 +26,10 @@ class OldbUserdata extends Command
      */
     public function handle()
     {
-        $users = DB::table('oldb_anggota')
+        $users = DB::connection('mysql_oldb')
+            ->table('anggota')
             ->whereNotNull('agt_email')
             ->groupBy('agt_id', 'agt_email')
-            ->limit(10)
             ->get();
 
         foreach ($users as $user) {

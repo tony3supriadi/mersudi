@@ -11,6 +11,10 @@ class Wilayah extends Model
     protected $table = "wilayah";
     protected $fillable = ["kode", "nama"];
     protected $primaryKey = "kode";
+    protected $casts = [
+        'kode' => 'string',
+        'nama' => 'string'
+    ];
 
     public static function provinces($code = null)
     {
@@ -30,7 +34,7 @@ class Wilayah extends Model
             ->orderBy('nama', 'ASC');
 
         if ($code != null) {
-            $query = $query->where('kode', $code);
+            $query = $query->where('kode', 'LIKE', $code . '%');
         }
 
         return $query->get();
@@ -42,7 +46,7 @@ class Wilayah extends Model
             ->orderBy('nama', 'ASC');
 
         if ($code != null) {
-            $query = $query->where('kode', $code);
+            $query = $query->where('kode', 'LIKE', $code . '%');
         }
 
         return $query->get();
@@ -54,7 +58,7 @@ class Wilayah extends Model
             ->orderBy('nama', 'ASC');
 
         if ($code != null) {
-            $query = $query->where('kode', $code);
+            $query = $query->where('kode', 'LIKE', $code . '%');
         }
 
         return $query->get();
