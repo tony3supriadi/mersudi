@@ -4,6 +4,11 @@
 
 @section('content')
 <h4 class="mb-4">Beranda</h4>
+
+@if(auth()->user()->hasRole('Anggota'))
+
+@endif
+
 @endsection
 
 @push('vendor-styles')
