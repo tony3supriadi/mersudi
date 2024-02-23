@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Cabang - Tambah Baru')
+@section('title', 'Cabang - Ubah Data')
 
 @section('content')
     <h4 class="content-header-title">
         <a href="{{ route('master.cabang.index') }}" class="btn btn-outline-secondary btn-icon rounded-circle me-2">
             <span class="ti ti-arrow-left"></span>
         </a>
-        <span class="text-muted fw-light">Cabang /</span> Tambah Baru
+        <span class="text-muted fw-light">Cabang /</span> Ubah Data
     </h4>
 
     <div class="row">

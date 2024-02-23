@@ -30,7 +30,7 @@ if (!function_exists('get_reg_number')) {
         if ($query->count() > 0) {
             $reg_number = $query->first()->nomor_urut_registrasi + 1;
         }
-        return $sprintf ? sprintf("%08d", $reg_number) : $reg_number;
+        return $sprintf ? sprintf("%06d", $reg_number) : $reg_number;
     }
 }
 
@@ -38,7 +38,7 @@ if (!function_exists('get_nomor_urut_registrasi')) {
     function get_member_number($sprintf = false)
     {
         $member_number = get_reg_number();
-        while (\App\Models\Anggota::where('nomor_urut_anggota', sprintf("%08d", $member_number))->exists()) {
+        while (\App\Models\Anggota::where('nomor_urut_anggota', sprintf("%06d", $member_number))->exists()) {
             $member_number += 1;
         }
         return sprintf("%06d", $member_number);

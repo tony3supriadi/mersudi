@@ -151,22 +151,22 @@ class Anggota extends Model
 
     public function provinsi()
     {
-        return $this->belongsTo(Wilayah::class, 'provinsi_id');
+        return $this->hasOne(Wilayah::class, 'kode', 'provinsi_id');
     }
 
     public function kabupaten()
     {
-        return $this->belongsTo(Wilayah::class, 'kabupaten_id');
+        return $this->hasOne(Wilayah::class, 'kode', 'kabupaten_id');
     }
 
     public function kecamatan()
     {
-        return $this->belongsTo(Wilayah::class, 'kecamatan_id');
+        return $this->hasOne(Wilayah::class, 'kode', 'kecamatan_id');
     }
 
     public function desa()
     {
-        return $this->belongsTo(Wilayah::class, 'desa_id');
+        return $this->hasOne(Wilayah::class, 'kode', 'desa_id');
     }
 
     public function kta()
@@ -196,5 +196,30 @@ class Anggota extends Model
             ->whereNotNull('tingkatan_id')
             ->whereNotNull('tanggal_bergabung')
             ->count() > 0;
+    }
+
+    public function getStatusName($badge = false)
+    {
+        if ($badge) {
+            if ($this->status == Anggota::STATUS_VERIFY) {
+                return '<span class="badge bg-label-warning">Verifikasi</span>';
+            } else if ($this->status == Anggota::STATUS_ACTIVE) {
+                return '<span class="badge bg-label-success">Aktif</span>';
+            } else if ($this->status == Anggota::STATUS_DENIED) {
+                return '<span class="badge bg-label-dark">Ditolak</span>';
+            } else if ($this->status == Anggota::STATUS_UNCOMPLETE) {
+                return '<span class="badge bg-label-secondary">Belum Lengkap</span>';
+            }
+        } else {
+            if ($this->status == Anggota::STATUS_VERIFY) {
+                return 'Verifikasi';
+            } else if ($this->status == Anggota::STATUS_ACTIVE) {
+                return 'Aktif';
+            } else if ($this->status == Anggota::STATUS_DENIED) {
+                return 'Ditolak';
+            } else if ($this->status == Anggota::STATUS_UNCOMPLETE) {
+                return 'Belum Lengkap';
+            }
+        }
     }
 }

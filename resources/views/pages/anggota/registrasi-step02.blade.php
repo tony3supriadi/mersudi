@@ -39,14 +39,14 @@
 
                                 <div class="form-group col-md-6 mb-3" data-field="cabang_id">
                                     <label for="cabang_id" class="form-label cabang-label">PENGCAB <span style="color:red">*</span></label>
-                                    <select name="cabang_id" id="cabang_id" data-placeholder="" class="form-select select2">
+                                    <select name="cabang_id" id="cabang_id" data-placeholder="" class="form-select select2" disabled>
                                         <option value=""></option>
                                     </select>
                                 </div>
 
                                 <div class="form-group col-md-6 mb-3" data-field="kolat_id">
                                     <label for="kolat_id" class="form-label kolat-label">KOLAT <span style="color:red">*</span></label>
-                                    <select name="kolat_id" id="kolat_id" data-placeholder="" class="form-select select2">
+                                    <select name="kolat_id" id="kolat_id" data-placeholder="" class="form-select select2" disabled>
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -111,10 +111,25 @@
             },
         });
 
-        $('.select2').select2();
-        $('.select2-nosearch').select2({
-            minimumResultsForSearch: Infinity
-        });
+        var select2 = $('.select2');
+        if (select2.length) {
+            select2.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
+
+        var select2noSrc = $('.select2-nosearch');
+        if (select2noSrc.length) {
+            select2noSrc.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
 
         $('.flatpicker').flatpickr({
             altInput: true,
@@ -137,7 +152,7 @@
                     data.forEach(item => {
                         html += `<option value="${item.id}" data-kode="${item.kode}">${item.nama.replace('CABANG ', '')}</option>`;
                     });
-                    $('#cabang_id').html(html);
+                    $('#cabang_id').prop('disabled', false).html(html);
                     $('.loading').remove();
                 }
             })
@@ -157,7 +172,7 @@
                     data.forEach(item => {
                         html += `<option value="${item.id}" data-kode="${item.kode}">${item.nama.replace('KOLAT ', '')}</option>`;
                     });
-                    $('#kolat_id').html(html);
+                    $('#kolat_id').prop('disabled', false).html(html);
                     $('.loading').remove();
                 }
             })

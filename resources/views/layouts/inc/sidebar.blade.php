@@ -85,6 +85,97 @@
             <span class="menu-header-text" data-i18n="Main Menu">Main Menu</span>
         </li>
 
+        <div class="menu-item @if(request()->routeIs('anggota.*') || request()->routeIs('daftar-anggota.*')) open @endif">
+
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-user"></i>
+                <div data-i18n="Anggota">Anggota</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item @if(request()->routeIs('daftar-anggota.*')) active @endif">
+                    <a href="{{ route('daftar-anggota.index') }}" class="menu-link">
+                        <div data-i18n="Daftar Anggota">Daftar Anggota</div>
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('anggota.validasi.*')) active @endif">
+                    <a href="{{ route('anggota.validasi.index') }}" class="menu-link">
+                        <div data-i18n="Validasi Anggota">Validasi Anggota</div>
+
+                        @if($validasi_anggota = \App\Models\Anggota::where('status', \App\Models\Anggota::STATUS_VERIFY)->count())
+                            <div class="badge bg-secondary rounded-pill ms-auto">{{ $validasi_anggota }}</div>
+                        @endif
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('anggota.verifikasi.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Verifikasi Bayar KTA">Verifikasi Bayar KTA</div>
+                        @if($validasi_anggota = \App\Models\Anggota::where('status', \App\Models\Anggota::STATUS_VERIFY)->count())
+                            <div class="badge bg-secondary rounded-pill ms-auto">{{ $validasi_anggota }}</div>
+                        @endif
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('anggota.ditolak.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Anggota Ditolak">Anggota Ditolak</div>
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('anggota.sertifikat.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Sertifikat Anggota">Sertifikat Anggota</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="menu-item @if(request()->routeIs('event.*')) open @endif">
+
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-calendar"></i>
+                <div data-i18n="Event">Event</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item @if(request()->routeIs('event.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Daftar Event">Daftar Event</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="menu-item @if(request()->routeIs('bendahara.*')) open @endif">
+
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-credit-card"></i>
+                <div data-i18n="Bendahara">Bendahara</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item @if(request()->routeIs('bendahara.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Verifikasim,">Verifikasi</div>
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('bendahara.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Iuran Kas Pengda">Iuran Kas Pengda</div>
+                    </a>
+                </li>
+
+                <li class="menu-item @if(request()->routeIs('bendahara.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Iuran Kas Cabang">Iuran Kas Cabang</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         @canany(['users', 'roles', 'permissions', 'settings'])
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text" data-i18n="Lainnya">Lainnya</span>

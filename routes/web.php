@@ -21,27 +21,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::group([
-        'prefix' => 'anggota',
-        'as' => 'anggota.'
-    ], function () {
-        Route::get('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb'])->name('registrasi.oldb');
-        Route::post('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb_submit']);
-
-        Route::get('registrasi', [App\Http\Controllers\Anggota\RegistrasiController::class, 'index'])->name('registrasi');
-        Route::post('registrasi/step-1', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_01'])->name('registrasi.submit');
-
-        Route::get('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step02'])->name('registrasi.step02');
-        Route::post('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_02'])->name('registrasi.step02.submit');
-
-        Route::get('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step03'])->name('registrasi.step03');
-        Route::post('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_03'])->name('registrasi.step03.submit');
-
-        Route::group(['middleware' => ['anggota']], function() {
-
-        });
-    });
-
-    Route::group([
         'prefix' => 'master',
         'as' => 'master.',
     ], function () {
@@ -131,6 +110,44 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         });
     });
 
+    Route::group([
+        'as' => 'daftar-anggota.',
+        'prefix' => 'daftar-anggota',
+        'controller' => App\Http\Controllers\Main\AnggotaController::class
+    ], function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+
+        Route::get('/import', 'import')->name('import');
+        Route::post('/import', 'import_submit')->name('import.submit');
+        Route::get('/download-template', 'downloadTemplate')->name('download-template');
+
+        Route::get('/{id}', 'show')->name('show');
+        Route::get('/{id}/edit', 'edit')->name('edit');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+
+    Route::group([
+        'prefix' => 'anggota',
+        'as' => 'anggota.',
+    ], function() {
+        Route::group([
+            'prefix' => 'validasi',
+            'as' => 'validasi.',
+            'controller' => App\Http\Controllers\Main\AnggotaValidasiController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{id}', 'show')->name('show');
+            Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::put('/{id}', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+    });
+
     Route::group(['prefix' => 'auth'], function () {
         Route::get('/account', [App\Http\Controllers\Auth\AccountController::class, 'index'])->name('auth.account');
         Route::post('/account', [App\Http\Controllers\Auth\AccountController::class, 'account_update'])->name('auth.account.update');
@@ -168,6 +185,28 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
     Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+
+
+    // AKSES ANGGOTA
+    Route::group([
+        'prefix' => 'ag',
+        'as' => 'anggota.'
+    ], function () {
+        Route::get('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb'])->name('registrasi.oldb');
+        Route::post('registrasi/oldb-data-lama', [App\Http\Controllers\Anggota\RegistrasiController::class, 'oldb_submit']);
+
+        Route::get('registrasi', [App\Http\Controllers\Anggota\RegistrasiController::class, 'index'])->name('registrasi');
+        Route::post('registrasi/step-1', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_01'])->name('registrasi.submit');
+
+        Route::get('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step02'])->name('registrasi.step02');
+        Route::post('registrasi/step-2', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_02'])->name('registrasi.step02.submit');
+
+        Route::get('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'step03'])->name('registrasi.step03');
+        Route::post('registrasi/step-3', [App\Http\Controllers\Anggota\RegistrasiController::class, 'submit_03'])->name('registrasi.step03.submit');
+
+        Route::group(['middleware' => ['anggota']], function () {
+        });
+    });
 });
 
 Route::group([

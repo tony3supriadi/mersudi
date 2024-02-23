@@ -117,17 +117,17 @@
 
                                 <div class="form-group col-md-6 mb-3" data-field="kabupaten_id">
                                     <label for="kabupaten_id" class="form-label cities-label">Kabupaten/Kota <span style="color:red">*</span></label>
-                                    <select name="kabupaten_id" id="kabupaten_id" data-placeholder="" class="form-select select2"></select>
+                                    <select name="kabupaten_id" id="kabupaten_id" data-placeholder="" class="form-select select2" disabled></select>
                                 </div>
 
                                 <div class="form-group col-md-6" data-field="kecamatan_id">
                                     <label for="kecamatan_id" class="form-label distirts-label">Kecamatan <span style="color:red">*</span></label>
-                                    <select name="kecamatan_id" id="kecamatan_id" data-placeholder="" class="form-select select2"></select>
+                                    <select name="kecamatan_id" id="kecamatan_id" data-placeholder="" class="form-select select2" disabled></select>
                                 </div>
 
                                 <div class="form-group col-md-6" data-field="desa_id">
                                     <label for="desa_id" class="form-label villages-label">Desa/Kelurahan <span style="color:red">*</span></label>
-                                    <select name="desa_id" id="desa_id" data-placeholder="" class="form-select select2"></select>
+                                    <select name="desa_id" id="desa_id" data-placeholder="" class="form-select select2" disabled></select>
                                 </div>
                             </div>
 
@@ -192,10 +192,25 @@
             },
         });
 
-        $('.select2').select2();
-        $('.select2-nosearch').select2({
-            minimumResultsForSearch: Infinity
-        });
+        var select2 = $('.select2');
+        if (select2.length) {
+            select2.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
+
+        var select2noSrc = $('.select2-nosearch');
+        if (select2noSrc.length) {
+            select2noSrc.each(function () {
+                var $this = $(this);
+                $this.wrap('<div class="position-relative"></div>').select2({
+                    dropdownParent: $this.parent()
+                });
+            });
+        }
 
         $('.datepicker').flatpickr({
             altInput: true,
@@ -218,7 +233,7 @@
                     data.forEach(item => {
                         html += `<option value="${item.kode}">${item.nama}</option>`;
                     });
-                    $('#kabupaten_id').html(html);
+                    $('#kabupaten_id').prop('disabled', false).html(html);
                     $('.loading').remove();
                 }
             })
@@ -239,7 +254,7 @@
                     data.forEach(item => {
                         html += `<option value="${item.kode}">${item.nama}</option>`;
                     });
-                    $('#kecamatan_id').html(html);
+                    $('#kecamatan_id').prop('disabled', false).html(html);
                     $('.loading').remove();
                 }
             })
@@ -260,7 +275,7 @@
                     data.forEach(item => {
                         html += `<option value="${item.kode}">${item.nama}</option>`;
                     });
-                    $('#desa_id').html(html);
+                    $('#desa_id').prop('disabled', false).html(html);
                     $('.loading').remove();
                 }
             });
