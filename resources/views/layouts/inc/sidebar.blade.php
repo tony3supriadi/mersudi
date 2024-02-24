@@ -119,7 +119,7 @@
                 </li>
 
                 <li class="menu-item @if(request()->routeIs('anggota.ditolak.*')) active @endif">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('anggota.ditolak.index') }}" class="menu-link">
                         <div data-i18n="Anggota Ditolak">Anggota Ditolak</div>
                     </a>
                 </li>

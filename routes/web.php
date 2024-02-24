@@ -152,6 +152,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('/{id}', 'show')->name('show');
             Route::put('/', 'varification_submit')->name('submit');
         });
+
+        Route::group([
+            'prefix' => 'ditolak',
+            'as' => 'ditolak.',
+            'controller' => App\Http\Controllers\Main\AnggotaDeniedController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
+        });
     });
 
     Route::group(['prefix' => 'auth'], function () {
