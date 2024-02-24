@@ -72,12 +72,10 @@ if (!function_exists('get_setting')) {
 if (!function_exists('set_invoice_number')) {
     function set_anggota_invoice_number()
     {
-        $invoice = \App\Models\AnggotaInvoice::orderBy('created_at', 'DESC');
-        if ($invoice->count() > 0) {
-            $invoice_number = $invoice->first()->invoice_number + 1;
-        } else {
-            $invoice_number = 1;
+        $invoice_number = rand(0, 99999999);
+        while (\App\Models\AnggotaHasKta::where('invoice_number', $invoice_number)->exists()) {
+            $invoice_number = rand(0, 99999999);
         }
-        return $invoice_number;
+        return sprintf("%08d", $invoice_number);
     }
 }

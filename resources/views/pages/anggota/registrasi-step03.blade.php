@@ -22,7 +22,7 @@
 
                         @include('pages.anggota.inc.registrasi-steps')
 
-                        @if($oldb != null || !request()->get('renew'))
+                        @if($oldb != null && !request()->get('renew'))
                             <h4 class="fs-6 mb-0">DATA KTA</h4>
                             <p>Beikut data KTA yang kami temukan di aplikasi mersudi v1.</p>
                             <div class="form-group mb-3">
@@ -38,12 +38,12 @@
                             <div class="form-group mb-3">
                                 <label class="form-label">Masa Berlaku</label>
                                 <input type="text" class="form-control" value="{{ Carbon\Carbon::parse($oldb->beli_kta_valid)->isoFormat('DD MMM YYYY') }}" disabled />
-                                @if(Carbon\Carbon::parse($oldb->beli_kta_valid)->diffInDays(Carbon\Carbon::now()) >= 0)
+                                @if(Carbon\Carbon::parse($oldb->beli_kta_valid)->diffInDays(Carbon\Carbon::now()) <= 0)
                                     <small class="text-danger">*KTA sudah tidak berlaku</small></small>
                                 @endif
                             </div>
 
-                            @if(Carbon\Carbon::parse($oldb->beli_kta_valid)->diffInDays(Carbon\Carbon::now()) >= 0)
+                            @if(Carbon\Carbon::parse($oldb->beli_kta_valid)->diffInDays(Carbon\Carbon::now()) <= 0)
                                 <a href="?renew=1" class="btn btn-primary">PERBARUI SEKARANG!</a>
                             @endif
 

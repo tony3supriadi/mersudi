@@ -25,6 +25,8 @@ return new class extends Migration
             $table->double('harga_total', 16, 0)->nullable();
             $table->date('tanggal_berlaku')->nullable();
             $table->date('tanggal_kadaluarsa')->nullable();
+            $table->string('invoice_number')->nullable();
+            $table->string('bukti_pembayaran')->nullable();
             $table->enum('status', [0, 1, 2])->nullable(); // [0: Validasi, 1: Aktif, 2: Ditolak]
             $table->text('keterangan')->nullable();
             $table->softDeletes();

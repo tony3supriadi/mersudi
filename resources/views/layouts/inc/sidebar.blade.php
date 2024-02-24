@@ -110,10 +110,10 @@
                 </li>
 
                 <li class="menu-item @if(request()->routeIs('anggota.verifikasi.*')) active @endif">
-                    <a href="#" class="menu-link">
-                        <div data-i18n="Verifikasi Bayar KTA">Verifikasi Bayar KTA</div>
-                        @if($validasi_anggota = \App\Models\Anggota::where('status', \App\Models\Anggota::STATUS_VERIFY)->count())
-                            <div class="badge bg-secondary rounded-pill ms-auto">{{ $validasi_anggota }}</div>
+                    <a href="{{ route('anggota.verifikasi.index') }}" class="menu-link">
+                        <div data-i18n="Verifikasi KTA">Verifikasi KTA</div>
+                        @if($validasi_kta = \App\Models\AnggotaHasKta::where('status', \App\Models\AnggotaHasKta::STATUS_VERIFY)->count())
+                            <div class="badge bg-secondary rounded-pill ms-auto">{{ $validasi_kta }}</div>
                         @endif
                     </a>
                 </li>

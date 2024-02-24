@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Anggota;
 use App\Http\Controllers\Controller;
 use App\Models\Anggota;
 use App\Models\AnggotaHasKta;
-use App\Models\AnggotaInvoice;
 use App\Models\MCabang;
 use App\Models\MDaerah;
 use Carbon\Carbon;
@@ -13,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class RegistrasiController extends Controller
 {
@@ -97,6 +97,12 @@ class RegistrasiController extends Controller
         $cabang = MCabang::find($request->cabang_id);
         $nia = $cabang->kode . '.' . $anggota->nomor_urut_anggota;
 
+        $status = Anggota::STATUS_VERIFY;
+
+        if (Auth::user()->datatype == 1) {
+            $status = Anggota::STATUS_ACTIVE;
+        }
+
         $anggota->update([
             'nia' => $nia,
             'daerah_id' => $request->daerah_id,
@@ -104,7 +110,7 @@ class RegistrasiController extends Controller
             'kolat_id' => $request->kolat_id,
             'tingkatan_id' => $request->tingkatan_id,
             'tanggal_bergabung' => $request->tanggal_bergabung,
-            'status' => Anggota::STATUS_VERIFY
+            'status' => $status
         ]);
 
         return response()->json([
@@ -134,26 +140,26 @@ class RegistrasiController extends Controller
     {
         $request->validate([
             'kta_id' => 'required',
+            'bukti_pembayaran' => Rule::requiredIf(function () use ($request) {
+                return Auth::user()->typedata == 0;
+            }),
         ], [
             'kta_id.required' => 'Jenis paket KTA belum dipilih.',
         ]);
 
-        $data = AnggotaHasKta::create($request->all());
+        $data = $request->all();
 
         if($request->hasFile('bukti_pembayaran')) {
             $path = 'invoices/';
             $fileName = Str::random(40) . '.' . $request->file('bukti_pembayaran')->getClientOriginalExtension();
             $request->file('bukti_pembayaran')->storeAs($path, $fileName, 'public');
-            $data->invoice()->create([
-                'invoice_number' => set_anggota_invoice_number(),
-                'anggota_id' => $data->anggota_id,
-                'anggota_has_kta_id' => $data->id,
-                'bukti_pembayaran' => $fileName,
-                'ketgori' => 'kta',
-                'total' => $data->total,
-                'status' => AnggotaInvoice::STATUS_VERIFY
-            ]);
+
+            $data['invoice_number'] = set_anggota_invoice_number();
+            $data['bukti_pembayaran'] = $fileName;
+            $data['status'] = AnggotaHasKta::STATUS_VERIFY;
         }
+
+        AnggotaHasKta::create($data);
 
         return response()->json([
             'status' => 'success',

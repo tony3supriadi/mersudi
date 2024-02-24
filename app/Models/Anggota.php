@@ -117,7 +117,7 @@ class Anggota extends Model
                 DB::table('anggota_log_verify')->insert([
                     'anggota_id' => $model->id,
                     'status' => $model->status,
-                    'keterangan' => $model->keterangan,
+                    'keterangan' => $model->keterangan ?? 'Pendaftaran anggota berhasil',
                     'verified_by' => auth()->user()->id
                 ]);
             }
@@ -176,11 +176,6 @@ class Anggota extends Model
 
     public function hasKta() {
         return $this->kta()->count();
-    }
-
-    public function invoice()
-    {
-        return $this->hasMany(AnggotaInvoice::class, 'anggota_id');
     }
 
     public function getUsiaAttribute()

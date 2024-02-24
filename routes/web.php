@@ -139,12 +139,18 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'controller' => App\Http\Controllers\Main\AnggotaValidasiController::class
         ], function () {
             Route::get('/', 'index')->name('index');
-            Route::get('/create', 'create')->name('create');
-            Route::post('/', 'store')->name('store');
             Route::get('/{id}', 'show')->name('show');
-            Route::get('/{id}/edit', 'edit')->name('edit');
-            Route::put('/{id}', 'update')->name('update');
-            Route::delete('/', 'destroy')->name('destroy');
+            Route::put('/', 'validate_submit')->name('submit');
+        });
+
+        Route::group([
+            'prefix' => 'verifikasi',
+            'as' => 'verifikasi.',
+            'controller' => App\Http\Controllers\Main\AnggotaVerificationController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
+            Route::put('/', 'varification_submit')->name('submit');
         });
     });
 
