@@ -125,7 +125,7 @@
                 </li>
 
                 <li class="menu-item @if(request()->routeIs('anggota.sertifikat.*')) active @endif">
-                    <a href="#" class="menu-link">
+                    <a href="{{ route('anggota.sertifikat.index') }}" class="menu-link">
                         <div data-i18n="Sertifikat Anggota">Sertifikat Anggota</div>
                     </a>
                 </li>

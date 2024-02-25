@@ -161,6 +161,20 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('/', 'index')->name('index');
             Route::get('/{id}', 'show')->name('show');
         });
+
+        Route::group([
+            'prefix' => 'sertifikat',
+            'as' => 'sertifikat.',
+            'controller' => App\Http\Controllers\Main\AnggotaSertifikatController::class
+        ], function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{id}', 'show')->name('show');
+            Route::get('/{id}/edit', 'edit')->name('edit');
+            Route::put('/{id}', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
     });
 
     Route::group(['prefix' => 'auth'], function () {

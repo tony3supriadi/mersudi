@@ -91,4 +91,9 @@ class MCabang extends Model
     {
         return $this->hasMany(MKolat::class, 'cabang_id', 'id');
     }
+
+    public function anggota_sertifikat()
+    {
+        return $this->morphMany(AnggotaSertifikat::class, 'model');
+    }
 }

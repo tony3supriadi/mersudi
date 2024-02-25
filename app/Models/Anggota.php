@@ -74,21 +74,23 @@ class Anggota extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            if ( ! User::where('email', $model->email)->exists() ) {
-                $user = User::create([
-                    'name' => $model->nama_lengkap,
-                    'email' => $model->email,
-                    'phone' => $model->phone,
-                    'password' => $model->password
-                        ? bcrypt($model->password)
-                        : bcrypt('12345678'),
-                    'email_verified_at' => now(),
-                ]);
+            if ($model->email) {
+                if ( ! User::where('email', $model->email)->exists() ) {
+                    $user = User::create([
+                        'name' => $model->nama_lengkap,
+                        'email' => $model->email,
+                        'phone' => $model->phone,
+                        'password' => $model->password
+                            ? bcrypt($model->password)
+                            : bcrypt('12345678'),
+                        'email_verified_at' => now(),
+                    ]);
 
-                $role = Role::where('name', 'Anggota')->first();
-                $user->assignRole([$role->id]);
+                    $role = Role::where('name', 'Anggota')->first();
+                    $user->assignRole([$role->id]);
 
-                $model->user_id = $user->id;
+                    $model->user_id = $user->id;
+                }
             }
         });
 

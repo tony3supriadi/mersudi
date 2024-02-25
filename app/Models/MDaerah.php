@@ -90,4 +90,9 @@ class MDaerah extends Model
     {
         return $this->hasMany(MKolat::class, 'daerah_id', 'id');
     }
+
+    public function anggota_sertifikat()
+    {
+        return $this->morphMany(AnggotaSertifikat::class, 'model');
+    }
 }

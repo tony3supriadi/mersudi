@@ -141,7 +141,7 @@ class RegistrasiController extends Controller
         $request->validate([
             'kta_id' => 'required',
             'bukti_pembayaran' => Rule::requiredIf(function () use ($request) {
-                return Auth::user()->typedata == 0;
+                return Auth::user()->typedata == 1;
             }),
         ], [
             'kta_id.required' => 'Jenis paket KTA belum dipilih.',
