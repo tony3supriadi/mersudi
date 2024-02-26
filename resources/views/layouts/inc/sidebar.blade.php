@@ -145,6 +145,12 @@
                         <div data-i18n="Daftar Event">Daftar Event</div>
                     </a>
                 </li>
+
+                <li class="menu-item @if(request()->routeIs('event.*')) active @endif">
+                    <a href="#" class="menu-link">
+                        <div data-i18n="Kalender Event">Kelender Event</div>
+                    </a>
+                </li>
             </ul>
         </div>
 

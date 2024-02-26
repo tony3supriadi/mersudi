@@ -94,7 +94,7 @@
                 title: "Level",
                 orderable: false,
                 render: (data, type, row, meta) => {
-                    if (row.daerah.length > 0) {
+                    if (row.daerah) {
                         return '<span class="badge bg-success">DAERAH</span>';
                     } else {
                         return '<span class="badge bg-warning">CABANG</span>';
@@ -105,11 +105,22 @@
                 title: "PENGDA/CABANG",
                 orderable: false,
                 render: (data, type, row, meta) => {
-                    if (row.daerah.length > 0) {
-                        return `<span class="badge bg-success">${row.daerah.nama}</span>`;
+                    if (row.daerah > 0) {
+                        return `<span>${row.daerah.nama}</span>`;
                     } else {
-                        return `<span class="badge bg-warning">${row.cabang.nama}</span>`;
+                        return `<span>${row.cabang.nama}</span>`;
                     }
+                }
+            }, {
+                data: "tanggal_pelaksanaan",
+                title: "Tanggal",
+                searchable: false,
+                orderable: false,
+                render: (data, type, row, meta) => {
+                    if (data) {
+                        return moment(data).format('DD MMM YYYY');
+                    }
+                    return '-';
                 }
             }, {
                 defaultContent: "",
@@ -132,12 +143,6 @@
                                     @can('master-daerah-update')
                                         <a href="{{ route('anggota.sertifikat.index') }}/${row.id}/edit" class="dropdown-item">
                                             <span class="ti ti-edit"></span> Ubah
-                                        </a>
-                                    @endcan
-
-                                    @can('master-daerah-delete')
-                                        <a href="javascript:;" data-id="${row.id}" class="dropdown-item text-danger btn-delete">
-                                            <span class="ti ti-trash"></span> Hapus
                                         </a>
                                     @endcan
                                 </div>
@@ -165,39 +170,6 @@
                     }
                 },
                 @endcan
-
-                @can('master-daerah-delete')
-                {
-                    // Desktop
-                    text: '<span class="ti ti-trash"></span> Hapus Masal',
-                    className: 'btn-bulk-action btn btn-danger d-none d-md-inline-block btn-divider-at-after ms-1 me-1',
-                    attr: {
-                        'disabled': ''
-                    }
-                },
-                {
-                    // Mobile
-                    text: '<span class="ti ti-trash"></span>',
-                    className: 'btn-bulk-action btn btn-danger btn-icon d-md-none ms-1 me-1',
-                    attr: {
-                        'disabled': ''
-                    }
-                },
-                @endcan
-
-                {
-                    extend: 'collection',
-                    className: 'btn btn-outline-secondary me-md-1 dropdown-toggle d-flex align-items-center ms-1',
-                    text: '<span class="ti ti-upload"></span> Export',
-                    buttons: [{
-                        extend: 'csv',
-                        text: '<span class="ti ti-file-text me-1"></span>Export to CSV',
-                        className: 'dropdown-item',
-                        exportOptions: {
-                            columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 18, 19, 20],
-                        }
-                    }]
-                }
             ],
             rowCallback: (row, data, index) => {
                 $('td:first-child .form-check', row).on('click', function() {

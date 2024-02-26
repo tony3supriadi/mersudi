@@ -17,32 +17,84 @@
                     @csrf
 
                     <div class="card-body">
-                        
+                        <div class="row">
+                            <div class="form-group col-12 mb-3" data-field="level">
+                                <label class="form-label">Level Kegiatan</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input type="radio" name="level" id="level-1" value="1" class="form-check-input" checked />
+                                        <label class="form-check-label" for="level-1">
+                                            PENGDA
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="radio" name="level" id="level-2" value="2" class="form-check-input" />
+                                        <label class="form-check-label" for="level-2">
+                                            CABANG
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="pengda-select-option" class="form-group col-12 mb-3" data-field="pengda">
+                                <label for="pengda" class="form-label">Pilih PENGDA <span style="color:red">*</span></label>
+                                <select name="pengda" id="pengda" data-placeholder="" class="form-select select2">
+                                    <option></option>
+                                    @foreach (\App\Models\MDaerah::get() as $pengda)
+                                        <option value="{{ $pengda->id }}">{{ $pengda->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div id="cabang-select-option" class="form-group col-12 mb-3 d-none" data-field="cabang">
+                                <label for="cabang" class="form-label">Pilih CABANG <span style="color:red">*</span></label>
+                                <select name="cabang" id="cabang" data-placeholder="" class="form-select select2">
+                                    <option></option>
+                                    @foreach (\App\Models\MCabang::get() as $cabang)
+                                        <option value="{{ $cabang->id }}">{{ $cabang->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-12 mb-3" data-field="judul_kegiatan">
+                                <label for="judul_kegiatan" class="form-label">Judul kegiatan <span style="color:red">*</span></label>
+                                <input type="text" name="judul_kegiatan" id="judul_kegiatan" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3" data-field="nomor_sertifikat">
+                                <label for="nomor_sertifikat" class="form-label">Nomor Sertifikat <span style="color:red">*</span></label>
+                                <input type="text" name="nomor_sertifikat" id="nomor_sertifikat" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3" data-field="tanggal_pelaksanaan">
+                                <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
+                                <input type="text" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" class="form-control flatpicker" />
+                            </div>
+
+                            <div class="form-group col-md-12 mb-3" data-field="background">
+                                <label for="background" class="form-label">Background <span style="color:red">*</span></label>
+                                <input type="file" name="background" id="background" class="form-control" />
+                            </div>
+
+                            <div class="form-group col-md-12 mb-3" data-field="pengesahan">
+                                <label for="pengesahan" class="form-label mb-2">Ditanda tangani oleh: <span style="color:red">*</span></label>
+                                @foreach (App\Models\Msignature::where('aktif', '1')->get() as $signature)
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" name="signature" id="signature-{{ $signature->id }}" value="{{ $signature->id }}" class="form-check-input" />
+                                        <label class="form-check-label" for="signature-{{ $signature->id }}">
+                                            {{ $signature->jabatan }}: {{ $signature->nama }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-footer border-top pt-3">
-                        <div class="btn-group">
-                            <button type="submit" data-redirect="back" class="btn btn-primary">
-                                <span>Simpan dan kembali</span>
-                            </button>
-                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="visually-hidden">Toggle Dropdown</span>
-                            </button>
-
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a href="javascript:;" data-redirect="back" id="save_back" class="dropdown-item submit-option d-none">
-                                    <span>Simpan dan kembali</span>
-                                </a>
-
-                                <a href="javascript:;" data-redirect="edit" id="save_edit" class="dropdown-item submit-option">
-                                    <span>Simpan dan ubah data ini</span>
-                                </a>
-
-                                <a href="javascript:;" data-redirect="new" id="save_new" class="dropdown-item submit-option">
-                                    <span>Simpan dan tambah baru</span>
-                                </a>
-                            </div>
-                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span>Simpan</span>
+                        </button>
 
                         <a href="{{ route('anggota.sertifikat.index') }}" class="btn btn-light mx-1">
                             Batal
@@ -67,8 +119,6 @@
 
 @push('scripts')
     <script type="text/javascript">
-        let redirect = $('button[type="submit"]').data('redirect');
-
         $(function() {
             var select2 = $('.select2');
             if (select2.length) {
@@ -80,9 +130,15 @@
                 });
             }
 
-            $('.submit-option').on('click', function() {
-                redirect = $(this).data('redirect');
-                $('#form-submit').submit();
+            $('input[name="level"]').on('change', function() {
+                let level = $(this).val();
+                if (level == 1) {
+                    $('#pengda-select-option').removeClass('d-none');
+                    $('#cabang-select-option').addClass('d-none');
+                } else {
+                    $('#cabang-select-option').removeClass('d-none');
+                    $('#pengda-select-option').addClass('d-none');
+                }
             });
         });
 
@@ -90,19 +146,8 @@
             form: '#form-submit',
             scrollToError: false,
             success: function(response) {
-                console.log(response);
                 if (response.status == "success") {
-                    switch (redirect) {
-                        case 'new':
-                            window.location.reload();
-                            break;
-                        case 'edit':
-                            window.location.href = `{{ route('anggota.sertifikat.index') }}/${response.data.id}/edit`;
-                            break;
-                        default:
-                            window.location.href = `{{ route('anggota.sertifikat.index') }}`;
-                            break;
-                    }
+                    window.location.href = "{{ route('anggota.sertifikat.index') }}/" + response.data.id;
                 }
             },
         });
@@ -111,109 +156,6 @@
             altInput: true,
             altFormat: "d M Y",
             dateFormat: "Y-m-d",
-        });
-
-        $('#provinsi_id').on('change', function() {
-            $('.cities-label').append('<span class="fa fa-spin fa-spinner loading ms-2"></span>');
-
-            var code = $(this).val();
-            $.ajax({
-                url: "{{ route('ajax.cities') }}",
-                type: "GET",
-                data: {
-                    kode: code
-                },
-                success: function(data) {
-                    var html = "<option></option>";
-                    data.forEach(item => {
-                        html += `<option value="${item.kode}">${item.nama}</option>`;
-                    });
-                    $('#kabupaten_id').prop('disabled', false).html(html);
-                    $('.loading').remove();
-                }
-            })
-        });
-
-        $('#kabupaten_id').on('change', function() {
-            $('.distirts-label').append('<span class="fa fa-spin fa-spinner loading ms-2"></span>');
-
-            var code = $(this).val();
-            $.ajax({
-                url: "{{ route('ajax.districts') }}",
-                type: "GET",
-                data: {
-                    kode: code
-                },
-                success: function(data) {
-                    var html = "<option></option>";
-                    data.forEach(item => {
-                        html += `<option value="${item.kode}">${item.nama}</option>`;
-                    });
-                    $('#kecamatan_id').prop('disabled', false).html(html);
-                    $('.loading').remove();
-                }
-            })
-        });
-
-        $('#kecamatan_id').on('change', function() {
-            $('.villages-label').append('<span class="fa fa-spin fa-spinner loading ms-2"></span>');
-
-            var code = $(this).val();
-            $.ajax({
-                url: "{{ route('ajax.villages') }}",
-                type: "GET",
-                data: {
-                    kode: code
-                },
-                success: function(data) {
-                    var html = "<option></option>";
-                    data.forEach(item => {
-                        html += `<option value="${item.kode}">${item.nama}</option>`;
-                    });
-                    $('#desa_id').prop('disabled', false).html(html);
-                    $('.loading').remove();
-                }
-            });
-        });
-
-        $('#daerah_id').on('change', function() {
-            $('.cabang-label').append('<span class="fa fa-spin fa-spinner loading ms-2"></span>');
-            var kode = $('#daerah_id option:selected').data('kode');
-            $.ajax({
-                url: "{{ route('ajax.cabang') }}",
-                type: "GET",
-                data: {
-                    pengda: kode
-                },
-                success: function(data) {
-                    var html = "<option></option>";
-                    data.forEach(item => {
-                        html += `<option value="${item.id}" data-kode="${item.kode}">${item.nama.replace('CABANG ', '')}</option>`;
-                    });
-                    $('#cabang_id').prop('disabled', false).html(html);
-                    $('.loading').remove();
-                }
-            })
-        });
-
-        $('#cabang_id').on('change', function() {
-            $('.kolat-label').append('<span class="fa fa-spin fa-spinner loading ms-2"></span>');
-            var kode = $('#cabang_id option:selected').data('kode');
-            $.ajax({
-                url: "{{ route('ajax.kolat') }}",
-                type: "GET",
-                data: {
-                    cabang: kode
-                },
-                success: function(data) {
-                    var html = "<option></option>";
-                    data.forEach(item => {
-                        html += `<option value="${item.id}" data-kode="${item.kode}">${item.nama.replace('KOLAT ', '')}</option>`;
-                    });
-                    $('#kolat_id').prop('disabled', false).html(html);
-                    $('.loading').remove();
-                }
-            })
         });
     </script>
 @endpush

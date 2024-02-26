@@ -31,12 +31,12 @@ class AnggotaSertifikat extends Model
 
     public function daerah()
     {
-        return $this->morphedByMany(MDaerah::class, 'model');
+        return $this->hasOne('App\Models\MDaerah', 'id', 'model_id');
     }
 
     public function cabang()
     {
-        return $this->morphedByMany(MCabang::class, 'model');
+        return $this->hasOne('App\Models\MCabang', 'id', 'model_id');
     }
 
     public function peserta()
